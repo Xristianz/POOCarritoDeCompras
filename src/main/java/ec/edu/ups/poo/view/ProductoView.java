@@ -8,27 +8,26 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ProductoView extends JFrame {
-
     private JPanel panelPrincipal;
-    private JTextField txtPrecio;
-    private JTextField txtNombre;
     private JTextField txtCodigo;
-    private JButton btnAceptar;
-    private JButton btnLimpiar;
-    private JButton btnEliminar;
-    private JButton btnCalcularTotal;;
-    private JLabel lblNombre;
-    private JLabel lblCodigo;
-    private JLabel lblPrecio;
+    private JTextField txtNombre;
+    private JTextField txtPrecio;
     private JTextField txtDescuento;
+    private JButton btnAgregar;
+    private JButton btnModificar;
+    private JButton btnEliminar;
+    private JButton btnLimpiar;
+    private JButton btnCalcularTotal;
+    private JLabel lblCodigo;
+    private JLabel lblNombre;
+    private JLabel lblPrecio;
     private JLabel lblDescuento;
 
     public ProductoView() {
-
         setContentPane(panelPrincipal);
-        setTitle("Datos del Producto");
+        setTitle("Gestión de Productos");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 500);
+        setSize(500, 400);
         setLocationRelativeTo(null);
         setVisible(true);
 
@@ -40,61 +39,28 @@ public class ProductoView extends JFrame {
         });
     }
 
-    public JPanel getPanelPrincipal() {
-        return panelPrincipal;
-    }
 
-    public void setPanelPrincipal(JPanel panelPrincipal) {
-        this.panelPrincipal = panelPrincipal;
+    public JButton getBtnAgregar() {
+        return btnAgregar;
     }
-
-    public JTextField getTxtPrecio() {
-        return txtPrecio;
-    }
-
-    public void setTxtPrecio(JTextField txtPrecio) {
-        this.txtPrecio = txtPrecio;
-    }
-
-    public JTextField getTxtNombre() {
-        return txtNombre;
-    }
-
-    public void setTxtNombre(JTextField txtNombre) {
-        this.txtNombre = txtNombre;
-    }
-
-    public JTextField getTxtCodigo() {
-        return txtCodigo;
-    }
-
-    public void setTxtCodigo(JTextField txtCodigo) {
-        this.txtCodigo = txtCodigo;
-    }
-
-    public JButton getBtnAceptar() {
-        return btnAceptar;
-    }
-
-    public void setBtnAceptar(JButton btnAceptar) {
-        this.btnAceptar = btnAceptar;
-    }
-
-    public JButton getBtnLimpiar() {
-        return btnLimpiar;
-    }
-
-    public void setBtnLimpiar(JButton btnLimpiar) {
-        this.btnLimpiar = btnLimpiar;
+    public JButton getBtnModificar() {
+        return btnModificar;
     }
     public JButton getBtnEliminar() {
         return btnEliminar;
     }
-
     public JButton getBtnCalcularTotal() {
         return btnCalcularTotal;
     }
-
+    public JTextField getTxtCodigo() {
+        return txtCodigo;
+    }
+    public JTextField getTxtNombre() {
+        return txtNombre;
+    }
+    public JTextField getTxtPrecio() {
+        return txtPrecio;
+    }
     public JTextField getTxtDescuento() {
         return txtDescuento;
     }
@@ -107,11 +73,6 @@ public class ProductoView extends JFrame {
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
-    }
-
-    public void mostrarProductos(List<Producto> productos) {
-        for (Producto producto : productos) {
-            System.out.println(producto);
-        }
+        txtDescuento.setText("");
     }
 }
