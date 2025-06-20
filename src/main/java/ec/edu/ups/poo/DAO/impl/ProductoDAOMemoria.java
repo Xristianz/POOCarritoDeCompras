@@ -1,11 +1,12 @@
-package ec.edu.ups.poo.dao.impl;
+package ec.edu.ups.poo.DAO.impl;
 
-import ec.edu.ups.poo.dao.ProductoDAO;
+import ec.edu.ups.poo.DAO.ProductoDAO;
 import ec.edu.ups.poo.models.Producto;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 
 public class ProductoDAOMemoria implements ProductoDAO {
 
@@ -62,7 +63,7 @@ public class ProductoDAOMemoria implements ProductoDAO {
     }
 
     @Override
-    public List<Producto> listar() {
+    public List<Producto> listarTodos() {
         return productos;
     }
 }

@@ -1,25 +1,43 @@
-package ec.edu.ups.poo.Service;
-
-import ec.edu.ups.poo.models.ItemCarrito;
-import ec.edu.ups.poo.models.Producto;
+package ec.edu.ups.poo.models;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
-public class CarritoServiceImpl implements CarritoService {
-    private final List<ItemCarrito> items;
+public class Carrito {
 
-    public CarritoServiceImpl() {
+    private int codigo;
+
+    private GregorianCalendar fechaCreacion;
+
+    private List<ItemCarrito> items;
+
+    public Carrito() {
         items = new ArrayList<>();
+        fechaCreacion = new GregorianCalendar();
     }
 
-    @Override
+    public int getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(int codigo) {
+        this.codigo = codigo;
+    }
+
+    public GregorianCalendar getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(GregorianCalendar fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
     public void agregarProducto(Producto producto, int cantidad) {
         items.add(new ItemCarrito(producto, cantidad));
     }
 
-    @Override
     public void eliminarProducto(int codigoProducto) {
         Iterator<ItemCarrito> it = items.iterator();
         while (it.hasNext()) {
@@ -30,12 +48,10 @@ public class CarritoServiceImpl implements CarritoService {
         }
     }
 
-    @Override
     public void vaciarCarrito() {
         items.clear();
     }
 
-    @Override
     public double calcularTotal() {
         double total = 0;
         for (ItemCarrito item : items) {
@@ -44,18 +60,11 @@ public class CarritoServiceImpl implements CarritoService {
         return total;
     }
 
-    @Override
     public List<ItemCarrito> obtenerItems() {
         return items;
     }
 
-    @Override
     public boolean estaVacio() {
         return items.isEmpty();
-    }
-    @Override
-    public double calcularTotalConDescuento(double porcentajeDescuento) {
-        double total = calcularTotal();
-        return total * (1 - porcentajeDescuento / 100);
     }
 }
