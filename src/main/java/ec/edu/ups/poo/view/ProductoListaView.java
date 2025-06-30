@@ -5,6 +5,7 @@ import ec.edu.ups.poo.models.Producto;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 
 public class ProductoListaView extends JInternalFrame {
 
@@ -15,8 +16,8 @@ public class ProductoListaView extends JInternalFrame {
     private JButton btnListar;
     private DefaultTableModel modelo;
 
-    public ProductoListaView() {
 
+    public ProductoListaView() {
         setContentPane(panelPrincipal);
         setTitle("Listado de Productos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -25,11 +26,13 @@ public class ProductoListaView extends JInternalFrame {
         setIconifiable(true);
         setResizable(true);
 
-
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Nombre", "Precio"};
+        Object[] columnas = {"Código", "Nombre", "Precio"};
         modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
+
+        btnBuscar.setText("Buscar");
+        btnListar.setText("Listar");
     }
 
     public JTextField getTxtBuscar() {

@@ -1,6 +1,7 @@
 package ec.edu.ups.poo.view;
 
 import javax.swing.*;
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 
 public class ProductoActualizarView extends JInternalFrame {
     // Componentes del GUI Designer
@@ -20,6 +21,7 @@ public class ProductoActualizarView extends JInternalFrame {
         setIconifiable(true);
         setResizable(true);
         //setLocationRelativeTo(null);
+
     }
 
     public JTextField getTxtCodigo() {
@@ -49,4 +51,11 @@ public class ProductoActualizarView extends JInternalFrame {
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
+    public void limpiarCampos() {
+        txtCodigo.setText("");
+        txtNombre.setText("");
+        txtPrecio.setText("");
+        txtCodigo.requestFocus(); // Opcional: coloca el foco en el campo código
+    }
+
 }

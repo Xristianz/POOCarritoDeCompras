@@ -1,6 +1,9 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 public class CarritoAnadirView extends JInternalFrame {
     private JButton btnBuscar;
@@ -16,6 +19,9 @@ public class CarritoAnadirView extends JInternalFrame {
     private JButton btnLimpiar;
     private JComboBox cbxCantidad;
     private JPanel panelPrincipal;
+    private JButton btnEliminarItem;
+    private JButton btnActualizarCantidad;
+
 
     public CarritoAnadirView(){
 
@@ -23,6 +29,26 @@ public class CarritoAnadirView extends JInternalFrame {
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
+        txtNombre.setEditable(false);
+        txtPrecio.setEditable(false);
+        txtSubtotal.setEditable(false);
+        txtIva.setEditable(false);
+        txtTotal.setEditable(false);
+
+
+        DefaultTableModel modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Hacer que la tabla no sea editable
+            }
+        };
+        modelo.addColumn("Código");
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Precio");
+        modelo.addColumn("Cantidad");
+        modelo.addColumn("Subtotal");
+        tblProductos.setModel(modelo);
+
         cargarDatos();
 
 
@@ -88,7 +114,16 @@ public class CarritoAnadirView extends JInternalFrame {
         return panelPrincipal;
     }
 
+    public JButton getBtnEliminarItem() {
+        return btnEliminarItem;
+    }
+
+    public JButton getBtnActualizarCantidad() {
+        return btnActualizarCantidad;
+    }
+
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
+
 }

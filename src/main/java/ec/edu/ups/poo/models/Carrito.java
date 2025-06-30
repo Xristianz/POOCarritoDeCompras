@@ -7,13 +7,21 @@ import java.util.List;
 
 public class Carrito {
 
+    private final double IVA = 0.12;
+
+    private static int contador = 0;
+
     private int codigo;
 
     private GregorianCalendar fechaCreacion;
 
     private List<ItemCarrito> items;
+    private Usuario usuario;
 
-    public Carrito() {
+    public Carrito(Usuario usuario) {
+        this.usuario = usuario;
+        contador++;
+        this.codigo = contador;
         items = new ArrayList<>();
         fechaCreacion = new GregorianCalendar();
     }
@@ -33,6 +41,10 @@ public class Carrito {
     public void setFechaCreacion(GregorianCalendar fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
 
     public void agregarProducto(Producto producto, int cantidad) {
         items.add(new ItemCarrito(producto, cantidad));
@@ -52,19 +64,41 @@ public class Carrito {
         items.clear();
     }
 
-    public double calcularTotal() {
-        double total = 0;
-        for (ItemCarrito item : items) {
-            total += item.getProducto().getPrecio() * item.getCantidad();
-        }
-        return total;
-    }
-
     public List<ItemCarrito> obtenerItems() {
         return items;
     }
 
     public boolean estaVacio() {
         return items.isEmpty();
+    }
+
+    public double calcularSubtotal() {
+        double subtotal = 0;
+        for (ItemCarrito item : items) {
+            subtotal += item.getProducto().getPrecio() * item.getCantidad();
+        }
+        return subtotal;
+    }
+
+    public double calcularIVA() {
+        double subtotal = calcularSubtotal();
+        return subtotal * IVA;
+    }
+
+    public double calcularTotal() {
+        return calcularSubtotal() + calcularIVA();
+    }
+
+    @Override
+    public String toString() {
+        return "Carrito{" +
+                "IVA=" + IVA +
+                ", codigo=" + codigo +
+                ", fechaCreacion=" + fechaCreacion +
+                ", items=" + items +
+                '}';
+    }
+    public boolean perteneceA(Usuario usuario) {
+        return this.usuario.getUsername().equals(usuario.getUsername());
     }
 }

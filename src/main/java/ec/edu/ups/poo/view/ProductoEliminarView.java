@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class ProductoEliminarView extends JInternalFrame {
@@ -10,6 +12,7 @@ public class ProductoEliminarView extends JInternalFrame {
     private JButton btnBuscar;
     private JButton btnEliminar;
 
+
     public ProductoEliminarView() {
         setContentPane(panelPrincipal);
         setTitle("ELIMINACIÓN DE PRODUCTOS");
@@ -19,6 +22,9 @@ public class ProductoEliminarView extends JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
+        txtNombre.setEditable(false);
+        txtPrecio.setEditable(false);
+
 
     }
 
@@ -59,4 +65,5 @@ public class ProductoEliminarView extends JInternalFrame {
         txtNombre.setText("");
         txtPrecio.setText("");
     }
+
 }

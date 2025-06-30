@@ -15,5 +15,6 @@ public interface CarritoDAO {
     void eliminar(int codigo);
 
     List<Carrito> listarTodos();
+    List<Carrito> listarPorUsuario(String username);
 
 }

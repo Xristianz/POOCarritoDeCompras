@@ -1,5 +1,6 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.Producto;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ public class ProductoAnadirView extends JInternalFrame {
     private JButton btnAceptar;
     private JButton btnLimpiar;
 
+
     public ProductoAnadirView() {
 
         setContentPane(panelPrincipal);
@@ -25,9 +27,7 @@ public class ProductoAnadirView extends JInternalFrame {
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        //setLocationRelativeTo(null);
-        //setVisible(true);
-        //pack();
+
 
         btnLimpiar.addActionListener(new ActionListener() {
             @Override
