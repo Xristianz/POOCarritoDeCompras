@@ -2,25 +2,22 @@ package ec.edu.ups.poo.view;
 
 import javax.swing.*;
 
-
-public class UsuarioAnadir extends JInternalFrame {
+public class RegistroView extends JFrame {
+    private JPanel panelPrincipal;
+    private JButton cancelarButton;
     private JTextField txtUsername;
     private JPasswordField txtContrasenia;
-    private JButton btnAgregarUsuario;
-    private JPanel panelPrincipal;
+    private JButton btnRegistrar;
     private JTextField txtPregunta1;
     private JTextField txtPregunta2;
     private JTextField txtPregunta3;
 
-    public UsuarioAnadir() {
-        super("Agregar Usuario", true, true, false, true);
+    public RegistroView() {
         setContentPane(panelPrincipal);
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setSize(400, 350);
-    }
-
-    public JButton getBtnAgregarUsuario() {
-        return btnAgregarUsuario;
+        setTitle("Registro de Usuario");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(500, 400);
+        setLocationRelativeTo(null);
     }
 
     public JTextField getTxtUsername() {
@@ -29,6 +26,10 @@ public class UsuarioAnadir extends JInternalFrame {
 
     public JPasswordField getTxtContrasenia() {
         return txtContrasenia;
+    }
+
+    public JButton getBtnRegistrar() {
+        return btnRegistrar;
     }
 
     public JTextField getTxtPregunta1() {

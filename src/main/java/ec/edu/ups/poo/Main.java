@@ -228,10 +228,13 @@ public class Main {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     String username = usuarioAnadirView.getTxtUsername().getText();
-                                    String contrasenia = usuarioAnadirView.getTxtContrasenia().getText();
+                                    String contrasenia = new String(usuarioAnadirView.getTxtContrasenia().getPassword());
+                                    String pregunta1 = usuarioAnadirView.getTxtPregunta1().getText();
+                                    String pregunta2 = usuarioAnadirView.getTxtPregunta2().getText();
+                                    String pregunta3 = usuarioAnadirView.getTxtPregunta3().getText();
 
-                                    if(username.isEmpty() || contrasenia.isEmpty()) {
-                                        usuarioAnadirView.mostrarMensaje("Usuario y contraseña son requeridos");
+                                    if(username.isEmpty() || contrasenia.isEmpty() || pregunta1.isEmpty() || pregunta2.isEmpty() || pregunta3.isEmpty()) {
+                                        usuarioAnadirView.mostrarMensaje("Todos los campos son requeridos");
                                         return;
                                     }
 
@@ -240,21 +243,19 @@ public class Main {
                                         return;
                                     }
 
-                                    Usuario nuevoUsuario = new Usuario(username, contrasenia, Rol.USUARIO);
+                                    Usuario nuevoUsuario = new Usuario(username, contrasenia, Rol.USUARIO, pregunta1, pregunta2, pregunta3);
                                     usuarioDAO.crear(nuevoUsuario);
                                     usuarioAnadirView.mostrarMensaje("Usuario creado exitosamente");
-                                    usuarioAnadirView.getTxtUsername().setText("");
-                                    usuarioAnadirView.getTxtContrasenia().setText("");
+                                    usuarioAnadirView.limpiarCampos();
                                 }
                             });
-                            usuarioActualizarView.getBtnActualizarContrasenia().addActionListener(new ActionListener() {
+
+                            usuarioActualizarView.getBtnBuscar().addActionListener(new ActionListener() {
                                 @Override
                                 public void actionPerformed(ActionEvent e) {
                                     String username = usuarioActualizarView.getTxtUsername().getText();
-                                    String nuevaContrasenia = usuarioActualizarView.getTxtNuevaContrasenia().getText();
-
-                                    if(username.isEmpty() || nuevaContrasenia.isEmpty()) {
-                                        usuarioActualizarView.mostrarMensaje("Usuario y nueva contraseña son requeridos");
+                                    if(username.isEmpty()) {
+                                        usuarioActualizarView.mostrarMensaje("Ingrese un nombre de usuario");
                                         return;
                                     }
 
@@ -264,11 +265,48 @@ public class Main {
                                         return;
                                     }
 
-                                    usuario.setContrasenia(nuevaContrasenia);
+                                    usuarioActualizarView.cargarDatosUsuario(usuario);
+                                }
+                            });
+                            usuarioActualizarView.getBtnActualizar().addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    String username = usuarioActualizarView.getTxtUsername().getText();
+                                    String nuevaContrasenia = new String(usuarioActualizarView.getTxtNuevaContrasenia().getPassword());
+                                    String pregunta1 = usuarioActualizarView.getTxtPregunta1().getText();
+                                    String pregunta2 = usuarioActualizarView.getTxtPregunta2().getText();
+                                    String pregunta3 = usuarioActualizarView.getTxtPregunta3().getText();
+
+                                    if(username.isEmpty()) {
+                                        usuarioActualizarView.mostrarMensaje("Ingrese un nombre de usuario");
+                                        return;
+                                    }
+
+                                    Usuario usuario = usuarioDAO.buscarPorUsername(username);
+                                    if(usuario == null) {
+                                        usuarioActualizarView.mostrarMensaje("Usuario no encontrado");
+                                        return;
+                                    }
+
+                                    if(!nuevaContrasenia.isEmpty()) {
+                                        usuario.setContrasenia(nuevaContrasenia);
+                                    }
+
+                                    if(!pregunta1.isEmpty()) {
+                                        usuario.setPregunta1(pregunta1);
+                                    }
+
+                                    if(!pregunta2.isEmpty()) {
+                                        usuario.setPregunta2(pregunta2);
+                                    }
+
+                                    if(!pregunta3.isEmpty()) {
+                                        usuario.setPregunta3(pregunta3);
+                                    }
+
                                     usuarioDAO.actualizar(usuario);
-                                    usuarioActualizarView.mostrarMensaje("Contraseña actualizada exitosamente");
-                                    usuarioActualizarView.getTxtUsername().setText("");
-                                    usuarioActualizarView.getTxtNuevaContrasenia().setText("");
+                                    usuarioActualizarView.mostrarMensaje("Usuario actualizado exitosamente");
+                                    usuarioView.cargarDatos(usuarioDAO.listarTodos()); // Actualizar la tabla
                                 }
                             });
                             principalView.getMenuItemActualizarCarrito().addActionListener(new ActionListener() {
@@ -315,11 +353,6 @@ public class Main {
                                 }
                             });
 
-
-
-
-
-
                             // Configurar eventos en CarritoEliminarView
                             carritoEliminarView.getBtnActualizarLista().addActionListener(new ActionListener() {
                                 @Override
@@ -355,7 +388,7 @@ public class Main {
                                             carritoDAO.eliminar(codigo);
                                             carritoEliminarView.mostrarMensaje("Carrito eliminado correctamente");
                                             carritoEliminarView.getTxtCodigoCarrito().setText("");
-                                            // Actualizar la lista
+
                                             carritoEliminarView.getModelo().setNumRows(0);
                                             for (Carrito carrito : carritoDAO.listarTodos()) {
                                                 Object[] fila = {

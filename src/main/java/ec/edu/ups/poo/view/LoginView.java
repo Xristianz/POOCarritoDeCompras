@@ -11,6 +11,14 @@ public class LoginView extends JFrame {
     private JButton btnRegistrarse;
     private JButton olvidoSuContraeñaButton;
 
+    public JButton getOlvidoSuContraeñaButton() {
+        return olvidoSuContraeñaButton;
+    }
+
+    public void setOlvidoSuContraeñaButton(JButton olvidoSuContraeñaButton) {
+        this.olvidoSuContraeñaButton = olvidoSuContraeñaButton;
+    }
+
     public LoginView() {
         setContentPane(panelPrincipal);
         setTitle("Iniciar Sesión");
