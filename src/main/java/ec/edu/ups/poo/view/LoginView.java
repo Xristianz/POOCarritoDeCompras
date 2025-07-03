@@ -1,5 +1,7 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class LoginView extends JFrame {
@@ -9,14 +11,16 @@ public class LoginView extends JFrame {
     private JPasswordField txtContrasenia;
     private JButton btnIniciarSesion;
     private JButton btnRegistrarse;
-    private JButton olvidoSuContraeñaButton;
+    private JButton olvidoSuContraseniaButton;
+    private JComboBox<String> cmbIdioma; // Nuevo ComboBox para idiomas
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
-    public JButton getOlvidoSuContraeñaButton() {
-        return olvidoSuContraeñaButton;
+    public JButton getOlvidoSuContraseniaButton() {
+        return olvidoSuContraseniaButton;
     }
 
-    public void setOlvidoSuContraeñaButton(JButton olvidoSuContraeñaButton) {
-        this.olvidoSuContraeñaButton = olvidoSuContraeñaButton;
+    public void setOlvidoSuContraseniaButton(JButton olvidoSuContraseniaButton) {
+        this.olvidoSuContraseniaButton = olvidoSuContraseniaButton;
     }
 
     public LoginView() {
@@ -74,10 +78,12 @@ public class LoginView extends JFrame {
     public void setBtnRegistrarse(JButton btnRegistrarse) {
         this.btnRegistrarse = btnRegistrarse;
     }
+
     public void limpiarCampos() {
         txtUsername.setText("");
         txtContrasenia.setText("");
     }
+
     public boolean confirmarRegistro() {
         int opcion = JOptionPane.showConfirmDialog(this,
                 "¿Registrar nuevo usuario con estos datos?",

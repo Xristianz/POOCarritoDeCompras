@@ -34,6 +34,7 @@ public class MenuPrincipalView extends JFrame {
     private MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler;
     private JMenuItem menuItemActualizarCarrito;
     private JMenuItem menuItemEliminarCarrito;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
     public MenuPrincipalView() {
         mensajeInternacionalizacionHandler = new MensajeInternacionalizacionHandler("es", "EC");
@@ -286,5 +287,6 @@ public class MenuPrincipalView extends JFrame {
 
 
     }
+
 
 }

@@ -3,22 +3,43 @@ public class Usuario {
     private String username;
     private String contrasenia;
     private Rol rol;
-    private String pregunta1;
-    private String pregunta2;
-    private String pregunta3;
+    private String nombre;
+    private String apellido;
+    private String correo;
+    private String telefono;
+    private String fechaNacimiento;
+    private int pregunta1Id;
+    private String respuesta1;
+    private int pregunta2Id;
+    private String respuesta2;
+    private int pregunta3Id;
+    private String respuesta3;
 
     public Usuario() {
     }
 
-    public Usuario(String username, String contrasenia, Rol rol, String pregunta1, String pregunta2, String pregunta3) {
+    public Usuario(String username, String contrasenia, Rol rol, String nombre, String apellido,
+                   String correo, String telefono, String fechaNacimiento,
+                   int pregunta1Id, String respuesta1,
+                   int pregunta2Id, String respuesta2,
+                   int pregunta3Id, String respuesta3) {
         this.username = username;
         this.contrasenia = contrasenia;
         this.rol = rol;
-        this.pregunta1 = pregunta1;
-        this.pregunta2 = pregunta2;
-        this.pregunta3 = pregunta3;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.correo = correo;
+        this.telefono = telefono;
+        this.fechaNacimiento = fechaNacimiento;
+        this.pregunta1Id = pregunta1Id;
+        this.respuesta1 = respuesta1;
+        this.pregunta2Id = pregunta2Id;
+        this.respuesta2 = respuesta2;
+        this.pregunta3Id = pregunta3Id;
+        this.respuesta3 = respuesta3;
     }
 
+    // Getters y Setters para todos los campos
     public String getUsername() {
         return username;
     }
@@ -43,28 +64,92 @@ public class Usuario {
         this.rol = rol;
     }
 
-    public String getPregunta1() {
-        return pregunta1;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setPregunta1(String pregunta1) {
-        this.pregunta1 = pregunta1;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getPregunta2() {
-        return pregunta2;
+    public String getApellido() {
+        return apellido;
     }
 
-    public void setPregunta2(String pregunta2) {
-        this.pregunta2 = pregunta2;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
     }
 
-    public String getPregunta3() {
-        return pregunta3;
+    public String getCorreo() {
+        return correo;
     }
 
-    public void setPregunta3(String pregunta3) {
-        this.pregunta3 = pregunta3;
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getFechaNacimiento() {
+        return fechaNacimiento;
+    }
+
+    public void setFechaNacimiento(String fechaNacimiento) {
+        this.fechaNacimiento = fechaNacimiento;
+    }
+
+    public int getPregunta1Id() {
+        return pregunta1Id;
+    }
+
+    public void setPregunta1Id(int pregunta1Id) {
+        this.pregunta1Id = pregunta1Id;
+    }
+
+    public String getRespuesta1() {
+        return respuesta1;
+    }
+
+    public void setRespuesta1(String respuesta1) {
+        this.respuesta1 = respuesta1;
+    }
+
+    public int getPregunta2Id() {
+        return pregunta2Id;
+    }
+
+    public void setPregunta2Id(int pregunta2Id) {
+        this.pregunta2Id = pregunta2Id;
+    }
+
+    public String getRespuesta2() {
+        return respuesta2;
+    }
+
+    public void setRespuesta2(String respuesta2) {
+        this.respuesta2 = respuesta2;
+    }
+
+    public int getPregunta3Id() {
+        return pregunta3Id;
+    }
+
+    public void setPregunta3Id(int pregunta3Id) {
+        this.pregunta3Id = pregunta3Id;
+    }
+
+    public String getRespuesta3() {
+        return respuesta3;
+    }
+
+    public void setRespuesta3(String respuesta3) {
+        this.respuesta3 = respuesta3;
     }
 
     @Override
@@ -73,10 +158,11 @@ public class Usuario {
                 "username='" + username + '\'' +
                 ", contrasenia='" + contrasenia + '\'' +
                 ", rol=" + rol +
-                ", pregunta1='" + pregunta1 + '\'' +
-                ", pregunta2='" + pregunta2 + '\'' +
-                ", pregunta3='" + pregunta3 + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", correo='" + correo + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", fechaNacimiento='" + fechaNacimiento + '\'' +
                 '}';
     }
-
 }

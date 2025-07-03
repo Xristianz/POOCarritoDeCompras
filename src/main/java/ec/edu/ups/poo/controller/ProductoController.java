@@ -93,14 +93,37 @@ public class ProductoController {
     }
 
     private void guardarProducto() {
-        int codigo = Integer.parseInt(productoAnadirView.getTxtCodigo().getText());
-        String nombre = productoAnadirView.getTxtNombre().getText();
-        double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
+        try {
 
-        productoDAO.crear(new Producto(codigo, nombre, precio));
-        productoAnadirView.mostrarMensaje("Producto guardado correctamente");
-        productoAnadirView.limpiarCampos();
-        productoAnadirView.mostrarProductos(productoDAO.listarTodos());
+            if (productoAnadirView.getTxtCodigo().getText().isEmpty() ||
+                    productoAnadirView.getTxtNombre().getText().isEmpty() ||
+                    productoAnadirView.getTxtPrecio().getText().isEmpty()) {
+                productoAnadirView.mostrarMensaje("Todos los campos son requeridos");
+                return;
+            }
+
+            int codigo = Integer.parseInt(productoAnadirView.getTxtCodigo().getText());
+            String nombre = productoAnadirView.getTxtNombre().getText();
+            double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
+
+
+            if (productoDAO.buscarPorCodigo(codigo) != null) {
+                productoAnadirView.mostrarMensaje("Ya existe un producto con este código");
+                return;
+            }
+
+            if (precio <= 0) {
+                productoAnadirView.mostrarMensaje("El precio debe ser mayor a cero");
+                return;
+            }
+
+            productoDAO.crear(new Producto(codigo, nombre, precio));
+            productoAnadirView.mostrarMensaje("Producto guardado correctamente");
+            productoAnadirView.limpiarCampos();
+            productoAnadirView.mostrarProductos(productoDAO.listarTodos());
+        } catch (NumberFormatException e) {
+            productoAnadirView.mostrarMensaje("El código y precio deben ser números válidos");
+        }
     }
 
     private void buscarProducto() {
@@ -110,7 +133,7 @@ public class ProductoController {
         productoListaView.cargarDatos(productosEncontrados);
     }
 
-    private void listarProductos() {
+    public void listarProductos() {
         List<Producto> productos = productoDAO.listarTodos();
         productoListaView.cargarDatos(productos);
     }

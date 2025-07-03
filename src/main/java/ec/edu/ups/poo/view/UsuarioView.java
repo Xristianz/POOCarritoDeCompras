@@ -19,13 +19,11 @@ public class UsuarioView extends JInternalFrame {
         super("Gestión de Usuarios", true, true, false, true);
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setSize(800, 400); // Aumentamos el tamaño
-        setClosable(true);
-        setIconifiable(true);
-        setResizable(true);
+        setSize(1000, 400); // Aumentamos el tamaño para acomodar más columnas
 
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Nombre", "Rol", "Pregunta 1", "Pregunta 2", "Pregunta 3"};
+        // Orden modificado según lo solicitado
+        Object[] columnas = {"Username", "Nombre", "Apellido", "Correo", "Teléfono", "Fecha Nacimiento", "Rol"};
         modelo.setColumnIdentifiers(columnas);
         tblUsuarios.setModel(modelo);
     }
@@ -34,15 +32,18 @@ public class UsuarioView extends JInternalFrame {
         modelo.setRowCount(0);
         for (Usuario u : usuarios) {
             Object[] fila = {
-                    u.getUsername(),
-                    u.getRol().name(),
-                    u.getPregunta1(),
-                    u.getPregunta2(),
-                    u.getPregunta3()
+                    u.getUsername(), // Primero el username
+                    u.getNombre(),
+                    u.getApellido(),
+                    u.getCorreo(),
+                    u.getTelefono(),
+                    u.getFechaNacimiento(),
+                    u.getRol().toString()
             };
             modelo.addRow(fila);
         }
     }
+
 
     public JTable getTblUsuarios() {
         return tblUsuarios;

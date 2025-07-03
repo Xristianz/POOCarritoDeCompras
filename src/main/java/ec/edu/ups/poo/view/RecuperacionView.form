@@ -37,7 +37,7 @@
           <text value="Pregunta de seguridad 1:"/>
         </properties>
       </component>
-      <component id="3dffe" class="javax.swing.JLabel">
+      <component id="3dffe" class="javax.swing.JLabel" binding="lblPregunta1">
         <constraints>
           <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -45,7 +45,7 @@
           <text value="¿Cuál es tu ciudad de nacimiento?"/>
         </properties>
       </component>
-      <component id="c6940" class="javax.swing.JTextField" binding="txtPregunta1">
+      <component id="c6940" class="javax.swing.JTextField" binding="txtRespuesta1">
         <constraints>
           <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -61,7 +61,7 @@
           <text value="Pregunta de seguridad 2: "/>
         </properties>
       </component>
-      <component id="e3004" class="javax.swing.JLabel">
+      <component id="e3004" class="javax.swing.JLabel" binding="lblPregunta2">
         <constraints>
           <grid row="4" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -69,7 +69,7 @@
           <text value="¿Nombre de tu primera mascota?"/>
         </properties>
       </component>
-      <component id="4567a" class="javax.swing.JTextField" binding="txtPregunta2">
+      <component id="4567a" class="javax.swing.JTextField" binding="txtRespuesta2">
         <constraints>
           <grid row="5" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -85,7 +85,7 @@
           <text value="Pregunta de seguridad 3:"/>
         </properties>
       </component>
-      <component id="793f8" class="javax.swing.JLabel">
+      <component id="793f8" class="javax.swing.JLabel" binding="lblPregunta3">
         <constraints>
           <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -93,7 +93,7 @@
           <text value="¿Color favorito?"/>
         </properties>
       </component>
-      <component id="58981" class="javax.swing.JTextField" binding="txtPregunta3">
+      <component id="58981" class="javax.swing.JTextField" binding="txtRespuesta3">
         <constraints>
           <grid row="7" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
             <preferred-size width="150" height="-1"/>
@@ -140,6 +140,14 @@
           </grid>
         </constraints>
         <properties/>
+      </component>
+      <component id="6f281" class="javax.swing.JButton" binding="btnBuscar">
+        <constraints>
+          <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Buscar"/>
+        </properties>
       </component>
     </children>
   </grid>

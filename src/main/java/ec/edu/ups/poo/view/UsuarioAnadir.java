@@ -3,24 +3,81 @@ package ec.edu.ups.poo.view;
 import javax.swing.*;
 
 
+import ec.edu.ups.poo.models.PreguntaSeguridad;
+import javax.swing.*;
+
 public class UsuarioAnadir extends JInternalFrame {
+    private JPanel panelPrincipal;
+    private JTextField txtNombre;
+    private JTextField txtApellido;
+    private JTextField txtCorreo;
+    private JTextField txtTelefono;
+    private JTextField txtFechaNacimiento;
     private JTextField txtUsername;
     private JPasswordField txtContrasenia;
+    private JComboBox<PreguntaSeguridad> cmbPregunta1; // Cambiado a PreguntaSeguridad
+    private JTextField txtRespuesta1;
+    private JComboBox<PreguntaSeguridad> cmbPregunta2; // Cambiado a PreguntaSeguridad
+    private JTextField txtRespuesta2;
+    private JComboBox<PreguntaSeguridad> cmbPregunta3; // Cambiado a PreguntaSeguridad
+    private JTextField txtRespuesta3;
     private JButton btnAgregarUsuario;
-    private JPanel panelPrincipal;
-    private JTextField txtPregunta1;
-    private JTextField txtPregunta2;
-    private JTextField txtPregunta3;
+    private JButton btnCancelar;
 
-    public UsuarioAnadir() {
-        super("Agregar Usuario", true, true, false, true);
-        setContentPane(panelPrincipal);
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setSize(400, 350);
+        public UsuarioAnadir() {
+            super("Agregar Usuario", true, true, false, true);
+            setContentPane(panelPrincipal);
+            setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+            setSize(500, 500);
+        }
+
+    // Getters actualizados
+    public JComboBox<PreguntaSeguridad> getCmbPregunta1() {
+        return cmbPregunta1;
     }
 
-    public JButton getBtnAgregarUsuario() {
-        return btnAgregarUsuario;
+    public JComboBox<PreguntaSeguridad> getCmbPregunta2() {
+        return cmbPregunta2;
+    }
+
+    public JComboBox<PreguntaSeguridad> getCmbPregunta3() {
+        return cmbPregunta3;
+    }
+
+    public JTextField getTxtRespuesta1() {
+        return txtRespuesta1;
+    }
+
+    public JTextField getTxtRespuesta2() {
+        return txtRespuesta2;
+    }
+
+    public JTextField getTxtRespuesta3() {
+        return txtRespuesta3;
+    }
+
+    public JPanel getPanelPrincipal() {
+        return panelPrincipal;
+    }
+
+    public JTextField getTxtNombre() {
+        return txtNombre;
+    }
+
+    public JTextField getTxtApellido() {
+        return txtApellido;
+    }
+
+    public JTextField getTxtCorreo() {
+        return txtCorreo;
+    }
+
+    public JTextField getTxtTelefono() {
+        return txtTelefono;
+    }
+
+    public JTextField getTxtFechaNacimiento() {
+        return txtFechaNacimiento;
     }
 
     public JTextField getTxtUsername() {
@@ -31,16 +88,12 @@ public class UsuarioAnadir extends JInternalFrame {
         return txtContrasenia;
     }
 
-    public JTextField getTxtPregunta1() {
-        return txtPregunta1;
+    public JButton getBtnAgregarUsuario() {
+        return btnAgregarUsuario;
     }
 
-    public JTextField getTxtPregunta2() {
-        return txtPregunta2;
-    }
-
-    public JTextField getTxtPregunta3() {
-        return txtPregunta3;
+    public JButton getBtnCancelar() {
+        return btnCancelar;
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -48,10 +101,18 @@ public class UsuarioAnadir extends JInternalFrame {
     }
 
     public void limpiarCampos() {
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtCorreo.setText("");
+        txtTelefono.setText("");
+        txtFechaNacimiento.setText("");
         txtUsername.setText("");
         txtContrasenia.setText("");
-        txtPregunta1.setText("");
-        txtPregunta2.setText("");
-        txtPregunta3.setText("");
+        txtRespuesta1.setText("");
+        txtRespuesta2.setText("");
+        txtRespuesta3.setText("");
+        cmbPregunta1.setSelectedIndex(0);
+        cmbPregunta2.setSelectedIndex(0);
+        cmbPregunta3.setSelectedIndex(0);
     }
 }

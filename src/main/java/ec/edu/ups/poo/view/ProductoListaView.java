@@ -98,4 +98,7 @@ public class ProductoListaView extends JInternalFrame {
 
 
     }
+
+    public void mostrarMensaje(String elCódigoDebeSerNumérico) {
+    }
 }

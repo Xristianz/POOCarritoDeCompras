@@ -2,10 +2,7 @@ package ec.edu.ups.poo.controller;
 
 import ec.edu.ups.poo.DAO.CarritoDAO;
 import ec.edu.ups.poo.DAO.ProductoDAO;
-import ec.edu.ups.poo.models.Carrito;
-import ec.edu.ups.poo.models.ItemCarrito;
-import ec.edu.ups.poo.models.Producto;
-import ec.edu.ups.poo.models.Usuario;
+import ec.edu.ups.poo.models.*;
 import ec.edu.ups.poo.view.CarritoActualizarView;
 import ec.edu.ups.poo.view.CarritoAnadirView;
 import ec.edu.ups.poo.view.CarritoListaView;
@@ -259,8 +256,13 @@ public class CarritoController {
         }
     }
 
-    private void listarCarritos() {
-        listaView.cargarDatos(carritoDAO.listarTodos());
+    public void listarCarritos() {
+        // Si es admin, mostrar todos los carritos, sino solo los del usuario actual
+        if (carrito.getUsuario().getRol() == Rol.ADMINISTRADOR) {
+            listaView.cargarDatos(carritoDAO.listarTodos());
+        } else {
+            listaView.cargarDatos(carritoDAO.listarPorUsuario(carrito.getUsuario().getUsername()));
+        }
     }
 
     private void verDetallesCarrito() {
@@ -271,30 +273,42 @@ public class CarritoController {
         }
 
         int codigo = (int) listaView.getModelo().getValueAt(filaSeleccionada, 0);
-        Carrito carrito = carritoDAO.buscarPorCodigo(codigo);
+        Carrito carritoSeleccionado = carritoDAO.buscarPorCodigo(codigo);
+
+        // Validar permisos - admin puede ver todo, usuario solo sus carritos
+        if (carrito.getUsuario().getRol() != Rol.ADMINISTRADOR &&
+                !carritoSeleccionado.getUsuario().getUsername().equals(carrito.getUsuario().getUsername())) {
+            listaView.mostrarMensaje("No tiene permiso para ver este carrito");
+            return;
+        }
 
         DetalleCarritoView detalleView = new DetalleCarritoView();
-        detalleView.cargarDetalles(carrito);
+        detalleView.cargarDetalles(carritoSeleccionado);
         detalleView.setVisible(true);
 
-        // Obtener el JDesktopPane del padre y agregar la vista
         JDesktopPane desktopPane = (JDesktopPane) SwingUtilities.getAncestorOfClass(
                 JDesktopPane.class, listaView);
         desktopPane.add(detalleView);
     }
 
-
-
     private void buscarCarritoActualizar() {
         try {
             int codigo = Integer.parseInt(actualizarView.getTxtCodigoCarrito().getText());
-            carrito = carritoDAO.buscarPorCodigo(codigo);
+            Carrito carritoEncontrado = carritoDAO.buscarPorCodigo(codigo);
 
-            if (carrito == null) {
+            if (carritoEncontrado == null) {
                 actualizarView.mostrarMensaje("Carrito no encontrado");
                 return;
             }
 
+            // Validar permisos - admin puede editar todo, usuario solo sus carritos
+            if (carrito.getUsuario().getRol() != Rol.ADMINISTRADOR &&
+                    !carritoEncontrado.getUsuario().getUsername().equals(carrito.getUsuario().getUsername())) {
+                actualizarView.mostrarMensaje("No tiene permiso para editar este carrito");
+                return;
+            }
+
+            this.carrito = carritoEncontrado;
             actualizarView.setCamposHabilitados(true);
             cargarProductosActualizar();
             mostrarTotalesActualizar();
@@ -302,6 +316,7 @@ public class CarritoController {
             actualizarView.mostrarMensaje("Ingrese un código válido");
         }
     }
+
 
     private void buscarProductoActualizar() {
         try {
