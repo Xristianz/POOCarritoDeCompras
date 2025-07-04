@@ -5,31 +5,62 @@ import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 
 public class LoginView extends JFrame {
-    private JPanel panelPrincipal;
     private JPanel panelSecundario;
+    private JPanel panelPrincipal; //
     private JTextField txtUsername;
     private JPasswordField txtContrasenia;
     private JButton btnIniciarSesion;
     private JButton btnRegistrarse;
     private JButton olvidoSuContraseniaButton;
-    private JComboBox<String> cmbIdioma; // Nuevo ComboBox para idiomas
+    private JLabel lblUsuario;
+    private JLabel lblContrasenia;
+
+
+    private JComboBox<String> cmbIdioma;
+
     private MensajeInternacionalizacionHandler mensajeHandler;
 
-    public JButton getOlvidoSuContraseniaButton() {
-        return olvidoSuContraseniaButton;
-    }
-
-    public void setOlvidoSuContraseniaButton(JButton olvidoSuContraseniaButton) {
-        this.olvidoSuContraseniaButton = olvidoSuContraseniaButton;
-    }
-
     public LoginView() {
-        setContentPane(panelPrincipal);
-        setTitle("Iniciar Sesión");
+        // 1. Configuración básica del JFrame
+        mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
+        setTitle(mensajeHandler.get("login.titulo"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
+
+        // 2. Cargar componentes del GUI Designer (automático)
+        setContentPane(panelPrincipal);
+
+        // 3. Configurar el ComboBox (ya agregado en el .form)
+        configurarIdiomas();
     }
+
+    private void configurarIdiomas() {
+        // Asegúrate de que cmbIdioma fue agregado en el GUI Designer
+        cmbIdioma.setModel(new DefaultComboBoxModel<>(new String[]{"Español", "English", "Français"}));
+
+        cmbIdioma.addActionListener(e -> {
+            String idioma = (String) cmbIdioma.getSelectedItem();
+            switch (idioma) {
+                case "Español" -> cambiarIdioma("es", "EC");
+                case "English" -> cambiarIdioma("en", "US");
+                case "Français" -> cambiarIdioma("fr", "FR");
+            }
+        });
+    }
+
+    private void cambiarIdioma(String lenguaje, String pais) {
+        mensajeHandler.setLenguaje(lenguaje, pais);
+        setTitle(mensajeHandler.get("login.titulo"));
+
+        // Actualizar textos (los componentes ya existen por el GUI Designer)
+        lblUsuario.setText(mensajeHandler.get("login.usuario"));
+        lblContrasenia.setText(mensajeHandler.get("login.contrasenia"));
+        btnIniciarSesion.setText(mensajeHandler.get("login.boton.iniciar"));
+        btnRegistrarse.setText(mensajeHandler.get("login.boton.registrar"));
+        olvidoSuContraseniaButton.setText(mensajeHandler.get("login.boton.recuperar"));
+    }
+
 
     public JPanel getPanelPrincipal() {
         return panelPrincipal;
@@ -39,13 +70,7 @@ public class LoginView extends JFrame {
         this.panelPrincipal = panelPrincipal;
     }
 
-    public JPanel getPanelSecundario() {
-        return panelSecundario;
-    }
 
-    public void setPanelSecundario(JPanel panelSecundario) {
-        this.panelSecundario = panelSecundario;
-    }
 
     public JTextField getTxtUsername() {
         return txtUsername;
@@ -90,6 +115,14 @@ public class LoginView extends JFrame {
                 "Confirmar registro",
                 JOptionPane.YES_NO_OPTION);
         return opcion == JOptionPane.YES_OPTION;
+    }
+
+    public JButton getOlvidoSuContraseniaButton() {
+        return olvidoSuContraseniaButton;
+    }
+
+    public void setOlvidoSuContraseniaButton(JButton olvidoSuContraseniaButton) {
+        this.olvidoSuContraseniaButton = olvidoSuContraseniaButton;
     }
 
     public void mostrarMensaje(String mensaje) {

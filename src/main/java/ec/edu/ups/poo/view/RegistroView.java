@@ -1,5 +1,6 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.PreguntaSeguridad;
 
 import javax.swing.*;
@@ -24,20 +25,74 @@ public class RegistroView extends JFrame {
     private JTextField txtCorreo;
     private JTextField txtTelefono;
     private JTextField txtFechaNacimiento;
+    private JComboBox<String> cmbIdioma;
+    private JLabel lblNombre;
+    private JLabel lblApellido;
+    private JLabel lblFechaNacimiento;
+    private JLabel lblCorreo;
+    private JLabel lblTelefono;
+    private JLabel lblUsuario;
+    private JLabel lblContrasenia;
+    private JLabel lblPreguntasSeguridad;
+    private JLabel lblPregunta1;
+    private JLabel lblPregunta2;
+    private JLabel lblPregunta3;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
     public RegistroView() {
+        // Configuración inicial
+        mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
         setContentPane(panelPrincipal);
-        setTitle("Registro de Usuario");
+        setTitle(mensajeHandler.get("registro.titulo")); // Usar clave de properties
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 500);
         setLocationRelativeTo(null);
 
-        cancelarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
+        // Configurar eventos
+        configurarEventos();
+        configurarIdiomas();
+    }
+
+    private void configurarEventos() {
+        cancelarButton.addActionListener(e -> dispose());
+    }
+
+    private void configurarIdiomas() {
+        cmbIdioma.setModel(new DefaultComboBoxModel<>(new String[]{"Español", "English", "Français"}));
+
+        cmbIdioma.addActionListener(e -> {
+            String idioma = (String) cmbIdioma.getSelectedItem();
+            switch (idioma) {
+                case "Español" -> cambiarIdioma("es", "EC");
+                case "English" -> cambiarIdioma("en", "US");
+                case "Français" -> cambiarIdioma("fr", "FR");
             }
         });
+    }
+
+    private void cambiarIdioma(String lenguaje, String pais) {
+        mensajeHandler.setLenguaje(lenguaje, pais);
+        setTitle(mensajeHandler.get("registro.titulo"));
+
+        // Actualizar todos los textos
+        cancelarButton.setText(mensajeHandler.get("registro.boton.cancelar"));
+        btnRegistrar.setText(mensajeHandler.get("registro.boton.registrar"));
+        lblNombre.setText(mensajeHandler.get("registro.label.nombre"));
+        lblApellido.setText(mensajeHandler.get("registro.label.apellido"));
+        lblFechaNacimiento.setText(mensajeHandler.get("registro.label.fecha_nacimiento"));
+        lblCorreo.setText(mensajeHandler.get("registro.label.correo"));
+        lblTelefono.setText(mensajeHandler.get("registro.label.telefono"));
+        lblUsuario.setText(mensajeHandler.get("registro.label.usuario"));
+        lblContrasenia.setText(mensajeHandler.get("registro.label.contrasenia"));
+        lblPreguntasSeguridad.setText(mensajeHandler.get("registro.label.preguntas_seguridad"));
+        lblPregunta1.setText(mensajeHandler.get("registro.label.pregunta1"));
+        lblPregunta2.setText(mensajeHandler.get("registro.label.pregunta2"));
+        lblPregunta3.setText(mensajeHandler.get("registro.label.pregunta3"));
+
+        // Actualizar textos de botones
+        btnRegistrar.setText(mensajeHandler.get("registro.boton.registrar"));
+        cancelarButton.setText(mensajeHandler.get("registro.boton.cancelar"));
+
     }
 
     // Getters para todos los campos
