@@ -16,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class CarritoController {
-
     private final CarritoDAO carritoDAO;
     private final ProductoDAO productoDAO;
     private final CarritoAnadirView carritoAnadirView;
@@ -36,10 +35,8 @@ public class CarritoController {
         this.listaView = listaView;
         this.actualizarView = actualizarView;
         this.carrito = new Carrito(usuario);
-
         configurarEventosEnVistas();
     }
-
 
     private void configurarEventosEnVistas() {
         carritoAnadirView.getBtnAnadir().addActionListener(new ActionListener() {
@@ -55,6 +52,7 @@ public class CarritoController {
                 guardarCarrito();
             }
         });
+
         carritoAnadirView.getBtnEliminarItem().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -68,6 +66,7 @@ public class CarritoController {
                 actualizarCantidad();
             }
         });
+
         listaView.getBtnBuscar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -130,9 +129,7 @@ public class CarritoController {
                 guardarCarritoActualizar();
             }
         });
-
     }
-
 
     private void guardarCarrito() {
         int opcion = JOptionPane.showConfirmDialog(
@@ -145,39 +142,38 @@ public class CarritoController {
         if (opcion == JOptionPane.YES_OPTION) {
             carritoDAO.crear(carrito);
             carritoAnadirView.mostrarMensaje("Carrito guardado correctamente");
-            carrito = new Carrito(carrito.getUsuario()); // Reiniciamos el carrito
-            cargarProductos(); // Actualizamos la tabla
-            mostrarTotales(); // Limpiamos los totales
+            carrito = new Carrito(carrito.getUsuario());
+            cargarProductos();
+            mostrarTotales();
         }
     }
 
     private void anadirProducto() {
-
         int codigo = Integer.parseInt(carritoAnadirView.getTxtCodigo().getText());
         Producto producto = productoDAO.buscarPorCodigo(codigo);
-        int cantidad =  Integer.parseInt(carritoAnadirView.getCbxCantidad().getSelectedItem().toString());
+        int cantidad = Integer.parseInt(carritoAnadirView.getCbxCantidad().getSelectedItem().toString());
         carrito.agregarProducto(producto, cantidad);
 
         cargarProductos();
         mostrarTotales();
-
     }
 
-    private void cargarProductos(){
-
+    private void cargarProductos() {
         List<ItemCarrito> items = carrito.obtenerItems();
         DefaultTableModel modelo = (DefaultTableModel) carritoAnadirView.getTblProductos().getModel();
         modelo.setNumRows(0);
         for (ItemCarrito item : items) {
-            modelo.addRow(new Object[]{ item.getProducto().getCodigo(),
+            modelo.addRow(new Object[]{
+                    item.getProducto().getCodigo(),
                     item.getProducto().getNombre(),
                     item.getProducto().getPrecio(),
                     item.getCantidad(),
-                    item.getProducto().getPrecio() * item.getCantidad() });
+                    item.getProducto().getPrecio() * item.getCantidad()
+            });
         }
     }
 
-    private void mostrarTotales(){
+    private void mostrarTotales() {
         String subtotal = String.valueOf(carrito.calcularSubtotal());
         String iva = String.valueOf(carrito.calcularIVA());
         String total = String.valueOf(carrito.calcularTotal());
@@ -186,9 +182,10 @@ public class CarritoController {
         carritoAnadirView.getTxtIva().setText(iva);
         carritoAnadirView.getTxtTotal().setText(total);
     }
+
     private void eliminarItem() {
         int filaSeleccionada = carritoAnadirView.getTblProductos().getSelectedRow();
-        if(filaSeleccionada == -1) {
+        if (filaSeleccionada == -1) {
             carritoAnadirView.mostrarMensaje("Seleccione un producto");
             return;
         }
@@ -219,6 +216,7 @@ public class CarritoController {
         cargarProductos();
         mostrarTotales();
     }
+
     private void buscarCarrito() {
         String codigoStr = listaView.getTxtBuscar().getText();
         if (codigoStr.isEmpty()) {
@@ -235,13 +233,11 @@ public class CarritoController {
                 return;
             }
 
-            // Verificar que el carrito pertenezca al usuario actual
             if (!carrito.getUsuario().getUsername().equals(this.carrito.getUsuario().getUsername())) {
                 listaView.mostrarMensaje("No tiene permiso para acceder a este carrito");
                 return;
             }
 
-            // Mostrar el carrito encontrado
             listaView.getModelo().setNumRows(0);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
             listaView.getModelo().addRow(new Object[]{
@@ -257,7 +253,6 @@ public class CarritoController {
     }
 
     public void listarCarritos() {
-        // Si es admin, mostrar todos los carritos, sino solo los del usuario actual
         if (carrito.getUsuario().getRol() == Rol.ADMINISTRADOR) {
             listaView.cargarDatos(carritoDAO.listarTodos());
         } else {
@@ -275,7 +270,6 @@ public class CarritoController {
         int codigo = (int) listaView.getModelo().getValueAt(filaSeleccionada, 0);
         Carrito carritoSeleccionado = carritoDAO.buscarPorCodigo(codigo);
 
-        // Validar permisos - admin puede ver todo, usuario solo sus carritos
         if (carrito.getUsuario().getRol() != Rol.ADMINISTRADOR &&
                 !carritoSeleccionado.getUsuario().getUsername().equals(carrito.getUsuario().getUsername())) {
             listaView.mostrarMensaje("No tiene permiso para ver este carrito");
@@ -301,7 +295,6 @@ public class CarritoController {
                 return;
             }
 
-            // Validar permisos - admin puede editar todo, usuario solo sus carritos
             if (carrito.getUsuario().getRol() != Rol.ADMINISTRADOR &&
                     !carritoEncontrado.getUsuario().getUsername().equals(carrito.getUsuario().getUsername())) {
                 actualizarView.mostrarMensaje("No tiene permiso para editar este carrito");
@@ -316,7 +309,6 @@ public class CarritoController {
             actualizarView.mostrarMensaje("Ingrese un código válido");
         }
     }
-
 
     private void buscarProductoActualizar() {
         try {
@@ -429,7 +421,4 @@ public class CarritoController {
             actualizarView.limpiarTodo();
         }
     }
-
-
-
 }

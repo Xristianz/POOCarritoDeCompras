@@ -5,6 +5,7 @@ import javax.swing.*;
 
 import ec.edu.ups.poo.models.PreguntaSeguridad;
 import javax.swing.*;
+import java.util.List;
 
 public class UsuarioAnadir extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -114,5 +115,20 @@ public class UsuarioAnadir extends JInternalFrame {
         cmbPregunta1.setSelectedIndex(0);
         cmbPregunta2.setSelectedIndex(0);
         cmbPregunta3.setSelectedIndex(0);
+    }
+    public void cargarPreguntas(List<PreguntaSeguridad> preguntas) {
+        DefaultComboBoxModel<PreguntaSeguridad> modeloPregunta1 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<PreguntaSeguridad> modeloPregunta2 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<PreguntaSeguridad> modeloPregunta3 = new DefaultComboBoxModel<>();
+
+        for (PreguntaSeguridad pregunta : preguntas) {
+            modeloPregunta1.addElement(pregunta);
+            modeloPregunta2.addElement(pregunta);
+            modeloPregunta3.addElement(pregunta);
+        }
+
+        cmbPregunta1.setModel(modeloPregunta1);
+        cmbPregunta2.setModel(modeloPregunta2);
+        cmbPregunta3.setModel(modeloPregunta3);
     }
 }

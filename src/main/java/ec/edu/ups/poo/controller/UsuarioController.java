@@ -97,7 +97,6 @@ public class UsuarioController {
             return;
         }
 
-        // Cargar las preguntas del usuario
         PreguntaSeguridad pregunta1 = preguntaSeguridadDAO.buscarPorId(usuario.getPregunta1Id());
         PreguntaSeguridad pregunta2 = preguntaSeguridadDAO.buscarPorId(usuario.getPregunta2Id());
         PreguntaSeguridad pregunta3 = preguntaSeguridadDAO.buscarPorId(usuario.getPregunta3Id());
@@ -178,6 +177,7 @@ public class UsuarioController {
             registroView.mostrarMensaje("El usuario ya existe");
             return;
         }
+
         if(pregunta1.getId() == pregunta2.getId() ||
                 pregunta1.getId() == pregunta3.getId() ||
                 pregunta2.getId() == pregunta3.getId()) {
@@ -198,10 +198,6 @@ public class UsuarioController {
         registroView.limpiarCampos();
         registroView.dispose();
     }
-
-
-
-
 
     private void autenticar() {
         String username = loginView.getTxtUsername().getText();
