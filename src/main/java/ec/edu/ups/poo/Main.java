@@ -1,9 +1,6 @@
 package ec.edu.ups.poo;
 
-import ec.edu.ups.poo.DAO.CarritoDAO;
-import ec.edu.ups.poo.DAO.PreguntaSeguridadDAO;
-import ec.edu.ups.poo.DAO.ProductoDAO;
-import ec.edu.ups.poo.DAO.UsuarioDAO;
+import ec.edu.ups.poo.DAO.*;
 import ec.edu.ups.poo.DAO.impl.*;
 import ec.edu.ups.poo.controller.*;
 import ec.edu.ups.poo.models.*;
@@ -20,6 +17,7 @@ public class Main {
     private static CarritoDAO carritoDAO = new CarritoDAOMemoria();
     private static UsuarioDAO usuarioDAO = new UsuarioDAOMemoria(carritoDAO);
     private static PreguntaSeguridadDAO preguntaSeguridadDAO = new PreguntaSeguridadDAOMemoria();
+    private static RespuestaSeguridadDAO respuestaSeguridadDAO = new RespuestaSeguridadDAOMemoria();
 
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -27,8 +25,8 @@ public class Main {
                 LoginView loginView = new LoginView();
                 loginView.setVisible(true);
 
-                UsuarioController usuarioController = new UsuarioController(usuarioDAO, preguntaSeguridadDAO, loginView);
-
+                UsuarioController usuarioController = new UsuarioController(
+                        usuarioDAO, preguntaSeguridadDAO, respuestaSeguridadDAO, loginView);
                 loginView.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosed(WindowEvent e) {
@@ -42,6 +40,7 @@ public class Main {
                             ProductoEliminarView productoEliminarView = new ProductoEliminarView();
                             CarritoAnadirView carritoAnadirView = new CarritoAnadirView();
                             CarritoListaView carritoListaView = new CarritoListaView();
+                            CarritoEliminarView carritoEliminarView = new CarritoEliminarView();
                             CarritoActualizarView carritoActualizarView = new CarritoActualizarView();
                             UsuarioView usuarioView = new UsuarioView();
                             UsuarioAnadir usuarioAnadirView = new UsuarioAnadir();
@@ -54,7 +53,7 @@ public class Main {
 
                             CarritoController carritoController = new CarritoController(
                                     carritoDAO, productoDAO, carritoAnadirView,
-                                    carritoListaView, carritoActualizarView, usuarioAutenticado);
+                                    carritoListaView, carritoActualizarView, carritoEliminarView, usuarioAutenticado);
 
                             principalView.mostrarMensaje("Bienvenido: " + usuarioAutenticado.getUsername());
                             if (usuarioAutenticado.getRol().equals(Rol.USUARIO)) {
@@ -65,7 +64,7 @@ public class Main {
                             configurarEventosMenu(principalView, productoAnadirView, productoListaView,
                                     productoActualizarView, productoEliminarView, carritoAnadirView,
                                     usuarioView, carritoListaView, usuarioAnadirView, usuarioActualizarView,
-                                    carritoActualizarView, loginView, usuarioController);
+                                    carritoActualizarView, carritoEliminarView, loginView, usuarioController);
 
                             // Configurar eventos de idioma
                             configurarEventosIdioma(principalView);
@@ -87,6 +86,7 @@ public class Main {
                                               UsuarioAnadir usuarioAnadirView,
                                               UsuarioActualizar usuarioActualizarView,
                                               CarritoActualizarView carritoActualizarView,
+                                              CarritoEliminarView carritoEliminarView,
                                               LoginView loginView,
                                               UsuarioController usuarioController) {
 
@@ -173,6 +173,19 @@ public class Main {
                 }
             }
         });
+        principalView.getMenuItemEliminarCarrito().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!carritoEliminarView.isVisible()) {
+                    carritoEliminarView.setVisible(true);
+                    principalView.getjDesktopPane().add(carritoEliminarView);
+                    try {
+                        carritoEliminarView.setSelected(true);
+                    } catch (Exception ex) {
+                    }
+                }
+            }
+        });
 
         principalView.getMenuItemActualizarCarrito().addActionListener(new ActionListener() {
             @Override
@@ -195,6 +208,7 @@ public class Main {
                     usuarioView.setVisible(true);
                     principalView.getjDesktopPane().add(usuarioView);
                     usuarioView.cargarDatos(usuarioDAO.listarTodos());
+                    usuarioController.configurarEventosUsuarioView(usuarioView);
                     try {
                         usuarioView.setSelected(true);
                     } catch (Exception ex) {
@@ -209,10 +223,10 @@ public class Main {
                 if (!usuarioAnadirView.isVisible()) {
                     usuarioAnadirView.setVisible(true);
                     principalView.getjDesktopPane().add(usuarioAnadirView);
+                    usuarioController.configurarEventosUsuarioAnadir(usuarioAnadirView);
                     try {
                         usuarioAnadirView.setSelected(true);
-                    } catch (Exception ex) {
-                    }
+                    } catch (Exception ex) {}
                 }
             }
         });
@@ -223,10 +237,10 @@ public class Main {
                 if (!usuarioActualizarView.isVisible()) {
                     usuarioActualizarView.setVisible(true);
                     principalView.getjDesktopPane().add(usuarioActualizarView);
+                    usuarioController.configurarEventosUsuarioActualizar(usuarioActualizarView);
                     try {
                         usuarioActualizarView.setSelected(true);
-                    } catch (Exception ex) {
-                    }
+                    } catch (Exception ex) {}
                 }
             }
         });

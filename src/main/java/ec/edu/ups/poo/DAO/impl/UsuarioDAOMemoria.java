@@ -8,16 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import ec.edu.ups.poo.DAO.UsuarioDAO;
-import ec.edu.ups.poo.models.Rol;
-import ec.edu.ups.poo.models.Usuario;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 public class UsuarioDAOMemoria implements UsuarioDAO {
-
     private List<Usuario> usuarios;
     private CarritoDAO carritoDAO;
 
@@ -25,40 +16,28 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         this.carritoDAO = carritoDAO;
         usuarios = new ArrayList<Usuario>();
 
-        // Admin inicial con todos los campos requeridos
+        // Admin inicial
         crear(new Usuario(
                 "admin",
                 "12345",
                 Rol.ADMINISTRADOR,
-                "Administrador",      // nombre
-                "Sistema",           // apellido
-                "admin@system.com",   // correo
-                "0999999999",         // teléfono
-                "01/01/2000",        // fecha nacimiento
-                2,                    // pregunta1Id (Ciudad nacimiento)
-                "Quito",              // respuesta1
-                1,                    // pregunta2Id (Nombre mascota)
-                "Firulais",           // respuesta2
-                3,                    // pregunta3Id (Color favorito)
-                "Azul"                // respuesta3
+                "Administrador",
+                "Sistema",
+                "admin@system.com",
+                "0999999999",
+                "01/01/2000"
         ));
 
-        // Usuario inicial con todos los campos requeridos
+        // Usuario inicial
         crear(new Usuario(
                 "user",
                 "12345",
                 Rol.USUARIO,
-                "Usuario",           // nombre
-                "Prueba",            // apellido
-                "user@test.com",      // correo
-                "0988888888",         // teléfono
-                "15/05/1995",         // fecha nacimiento
-                4,                    // pregunta1Id (Amigo infancia)
-                "Juan",               // respuesta1
-                5,                    // pregunta2Id (Comida favorita)
-                "Pizza",              // respuesta2
-                6,                    // pregunta3Id (Profesor favorito)
-                "Gonzalez"            // respuesta3
+                "Usuario",
+                "Prueba",
+                "user@test.com",
+                "0988888888",
+                "15/05/1995"
         ));
     }
 
@@ -137,14 +116,4 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         return usuariosEncontrados;
     }
 
-    // Método adicional para verificar respuestas de seguridad
-    public boolean verificarRespuestasSeguridad(String username, String respuesta1, String respuesta2, String respuesta3) {
-        Usuario usuario = buscarPorUsername(username);
-        if (usuario == null) {
-            return false;
-        }
-        return usuario.getRespuesta1().equals(respuesta1) &&
-                usuario.getRespuesta2().equals(respuesta2) &&
-                usuario.getRespuesta3().equals(respuesta3);
-    }
 }

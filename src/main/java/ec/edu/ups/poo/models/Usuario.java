@@ -8,21 +8,12 @@ public class Usuario {
     private String correo;
     private String telefono;
     private String fechaNacimiento;
-    private int pregunta1Id;
-    private String respuesta1;
-    private int pregunta2Id;
-    private String respuesta2;
-    private int pregunta3Id;
-    private String respuesta3;
 
     public Usuario() {
     }
 
     public Usuario(String username, String contrasenia, Rol rol, String nombre, String apellido,
-                   String correo, String telefono, String fechaNacimiento,
-                   int pregunta1Id, String respuesta1,
-                   int pregunta2Id, String respuesta2,
-                   int pregunta3Id, String respuesta3) {
+                   String correo, String telefono, String fechaNacimiento) {
         this.username = username;
         this.contrasenia = contrasenia;
         this.rol = rol;
@@ -31,12 +22,6 @@ public class Usuario {
         this.correo = correo;
         this.telefono = telefono;
         this.fechaNacimiento = fechaNacimiento;
-        this.pregunta1Id = pregunta1Id;
-        this.respuesta1 = respuesta1;
-        this.pregunta2Id = pregunta2Id;
-        this.respuesta2 = respuesta2;
-        this.pregunta3Id = pregunta3Id;
-        this.respuesta3 = respuesta3;
     }
 
     // Getters y Setters para todos los campos
@@ -102,54 +87,6 @@ public class Usuario {
 
     public void setFechaNacimiento(String fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
-    }
-
-    public int getPregunta1Id() {
-        return pregunta1Id;
-    }
-
-    public void setPregunta1Id(int pregunta1Id) {
-        this.pregunta1Id = pregunta1Id;
-    }
-
-    public String getRespuesta1() {
-        return respuesta1;
-    }
-
-    public void setRespuesta1(String respuesta1) {
-        this.respuesta1 = respuesta1;
-    }
-
-    public int getPregunta2Id() {
-        return pregunta2Id;
-    }
-
-    public void setPregunta2Id(int pregunta2Id) {
-        this.pregunta2Id = pregunta2Id;
-    }
-
-    public String getRespuesta2() {
-        return respuesta2;
-    }
-
-    public void setRespuesta2(String respuesta2) {
-        this.respuesta2 = respuesta2;
-    }
-
-    public int getPregunta3Id() {
-        return pregunta3Id;
-    }
-
-    public void setPregunta3Id(int pregunta3Id) {
-        this.pregunta3Id = pregunta3Id;
-    }
-
-    public String getRespuesta3() {
-        return respuesta3;
-    }
-
-    public void setRespuesta3(String respuesta3) {
-        this.respuesta3 = respuesta3;
     }
 
     @Override

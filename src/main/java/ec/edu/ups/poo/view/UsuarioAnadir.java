@@ -1,11 +1,10 @@
 package ec.edu.ups.poo.view;
 
-import javax.swing.*;
-
-
 import ec.edu.ups.poo.models.PreguntaSeguridad;
 import javax.swing.*;
 import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class UsuarioAnadir extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -16,85 +15,138 @@ public class UsuarioAnadir extends JInternalFrame {
     private JTextField txtFechaNacimiento;
     private JTextField txtUsername;
     private JPasswordField txtContrasenia;
-    private JComboBox<PreguntaSeguridad> cmbPregunta1; // Cambiado a PreguntaSeguridad
-    private JTextField txtRespuesta1;
-    private JComboBox<PreguntaSeguridad> cmbPregunta2; // Cambiado a PreguntaSeguridad
-    private JTextField txtRespuesta2;
-    private JComboBox<PreguntaSeguridad> cmbPregunta3; // Cambiado a PreguntaSeguridad
-    private JTextField txtRespuesta3;
+    private JLabel lblPreguntaActual;
+    private JTextField txtRespuesta;
+    private JButton btnGuardarRespuesta;
     private JButton btnAgregarUsuario;
     private JButton btnCancelar;
 
-        public UsuarioAnadir() {
-            super("Agregar Usuario", true, true, false, true);
-            setContentPane(panelPrincipal);
-            setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-            setSize(500, 500);
+    private List<PreguntaSeguridad> preguntas;
+    private int preguntaActualIndex;
+    private int preguntasRespondidas;
+    private String[] respuestasGuardadas;
+    private int[] idsPreguntasRespondidas;
+
+    public UsuarioAnadir() {
+        super("Agregar Usuario", true, true, false, true);
+        setContentPane(panelPrincipal);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setSize(600, 500);
+
+        respuestasGuardadas = new String[3];
+        idsPreguntasRespondidas = new int[3];
+        preguntasRespondidas = 0;
+
+        configurarEventos();
+    }
+
+    private void configurarEventos() {
+        btnCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
+
+        btnGuardarRespuesta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (txtRespuesta.getText().isEmpty()) {
+                    mostrarMensaje("Debe ingresar una respuesta");
+                    return;
+                }
+
+                if (preguntasRespondidas < 3) {
+                    respuestasGuardadas[preguntasRespondidas] = txtRespuesta.getText();
+                    idsPreguntasRespondidas[preguntasRespondidas] = preguntas.get(preguntaActualIndex).getId();
+                    preguntasRespondidas++;
+                    txtRespuesta.setText("");
+
+                    if (preguntasRespondidas < 3) {
+                        mostrarSiguientePregunta();
+                    } else {
+                        lblPreguntaActual.setText("Has respondido las 3 preguntas requeridas");
+                        btnGuardarRespuesta.setEnabled(false);
+                        txtRespuesta.setEnabled(false);
+                    }
+                }
+            }
+        });
+    }
+
+    public void cargarPreguntas(List<PreguntaSeguridad> preguntas) {
+        this.preguntas = preguntas;
+        this.preguntaActualIndex = 0;
+        this.preguntasRespondidas = 0;
+        mostrarSiguientePregunta();
+    }
+
+    private void mostrarSiguientePregunta() {
+        if (preguntas == null || preguntas.isEmpty()) {
+            lblPreguntaActual.setText("No hay preguntas disponibles");
+            return;
         }
 
-    // Getters actualizados
-    public JComboBox<PreguntaSeguridad> getCmbPregunta1() {
-        return cmbPregunta1;
+        int index;
+        do {
+            index = (int) (Math.random() * preguntas.size());
+        } while (yaRespondida(preguntas.get(index).getId()));
+
+        preguntaActualIndex = index;
+        lblPreguntaActual.setText(preguntas.get(preguntaActualIndex).getTexto());
     }
 
-    public JComboBox<PreguntaSeguridad> getCmbPregunta2() {
-        return cmbPregunta2;
+    private boolean yaRespondida(int preguntaId) {
+        for (int i = 0; i < preguntasRespondidas; i++) {
+            if (idsPreguntasRespondidas[i] == preguntaId) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public JComboBox<PreguntaSeguridad> getCmbPregunta3() {
-        return cmbPregunta3;
+    public String getNombre() {
+        return txtNombre.getText();
     }
 
-    public JTextField getTxtRespuesta1() {
-        return txtRespuesta1;
+    public String getApellido() {
+        return txtApellido.getText();
     }
 
-    public JTextField getTxtRespuesta2() {
-        return txtRespuesta2;
+    public String getCorreo() {
+        return txtCorreo.getText();
     }
 
-    public JTextField getTxtRespuesta3() {
-        return txtRespuesta3;
+    public String getTelefono() {
+        return txtTelefono.getText();
     }
 
-    public JPanel getPanelPrincipal() {
-        return panelPrincipal;
+    public String getFechaNacimiento() {
+        return txtFechaNacimiento.getText();
     }
 
-    public JTextField getTxtNombre() {
-        return txtNombre;
+    public String getUsername() {
+        return txtUsername.getText();
     }
 
-    public JTextField getTxtApellido() {
-        return txtApellido;
+    public String getContrasenia() {
+        return new String(txtContrasenia.getPassword());
     }
 
-    public JTextField getTxtCorreo() {
-        return txtCorreo;
+    public String[] getRespuestasGuardadas() {
+        return respuestasGuardadas;
     }
 
-    public JTextField getTxtTelefono() {
-        return txtTelefono;
+    public int[] getIdsPreguntasRespondidas() {
+        return idsPreguntasRespondidas;
     }
 
-    public JTextField getTxtFechaNacimiento() {
-        return txtFechaNacimiento;
-    }
-
-    public JTextField getTxtUsername() {
-        return txtUsername;
-    }
-
-    public JPasswordField getTxtContrasenia() {
-        return txtContrasenia;
+    public int getPreguntasRespondidas() {
+        return preguntasRespondidas;
     }
 
     public JButton getBtnAgregarUsuario() {
         return btnAgregarUsuario;
-    }
-
-    public JButton getBtnCancelar() {
-        return btnCancelar;
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -109,26 +161,17 @@ public class UsuarioAnadir extends JInternalFrame {
         txtFechaNacimiento.setText("");
         txtUsername.setText("");
         txtContrasenia.setText("");
-        txtRespuesta1.setText("");
-        txtRespuesta2.setText("");
-        txtRespuesta3.setText("");
-        cmbPregunta1.setSelectedIndex(0);
-        cmbPregunta2.setSelectedIndex(0);
-        cmbPregunta3.setSelectedIndex(0);
-    }
-    public void cargarPreguntas(List<PreguntaSeguridad> preguntas) {
-        DefaultComboBoxModel<PreguntaSeguridad> modeloPregunta1 = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<PreguntaSeguridad> modeloPregunta2 = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<PreguntaSeguridad> modeloPregunta3 = new DefaultComboBoxModel<>();
+        txtRespuesta.setText("");
 
-        for (PreguntaSeguridad pregunta : preguntas) {
-            modeloPregunta1.addElement(pregunta);
-            modeloPregunta2.addElement(pregunta);
-            modeloPregunta3.addElement(pregunta);
+        preguntasRespondidas = 0;
+        respuestasGuardadas = new String[3];
+        idsPreguntasRespondidas = new int[3];
+
+        btnGuardarRespuesta.setEnabled(true);
+        txtRespuesta.setEnabled(true);
+
+        if (preguntas != null && !preguntas.isEmpty()) {
+            mostrarSiguientePregunta();
         }
-
-        cmbPregunta1.setModel(modeloPregunta1);
-        cmbPregunta2.setModel(modeloPregunta2);
-        cmbPregunta3.setModel(modeloPregunta3);
     }
 }

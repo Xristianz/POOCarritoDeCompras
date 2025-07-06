@@ -5,55 +5,71 @@ import javax.swing.*;
 public class RecuperacionView extends JFrame {
     private JPanel panelPrincipal;
     private JTextField txtUsername;
-    private JLabel lblPregunta1;
-    private JTextField txtRespuesta1;
-    private JLabel lblPregunta2;
-    private JTextField txtRespuesta2;
-    private JLabel lblPregunta3;
-    private JTextField txtRespuesta3;
+    private JLabel lblPregunta;
+    private JTextField txtRespuesta;
     private JPasswordField txtNuevaContrasenia;
     private JButton btnVerificar;
     private JButton btnCambiarContrasenia;
     private JButton btnBuscar;
 
+    private String[] preguntas;
+    private String[] respuestasCorrectas;
+    private int preguntaActualIndex;
+    private int intentosRestantes;
+
     public RecuperacionView() {
         setContentPane(panelPrincipal);
         setTitle("Recuperación de Contraseña");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 400);
+        setSize(500, 300);
         setLocationRelativeTo(null);
 
         // Inicialmente deshabilitamos los campos hasta que se busque el usuario
-        lblPregunta1.setText("Pregunta 1");
-        lblPregunta2.setText("Pregunta 2");
-        lblPregunta3.setText("Pregunta 3");
-        txtRespuesta1.setEnabled(false);
-        txtRespuesta2.setEnabled(false);
-        txtRespuesta3.setEnabled(false);
+        lblPregunta.setText("Ingrese su nombre de usuario y presione Buscar");
+        txtRespuesta.setEnabled(false);
         txtNuevaContrasenia.setEnabled(false);
         btnVerificar.setEnabled(false);
         btnCambiarContrasenia.setEnabled(false);
     }
 
-    public void cargarPreguntas(String pregunta1, String pregunta2, String pregunta3) {
-        lblPregunta1.setText(pregunta1);
-        lblPregunta2.setText(pregunta2);
-        lblPregunta3.setText(pregunta3);
-
-        // Habilitar campos después de cargar las preguntas
-        txtRespuesta1.setEnabled(true);
-        txtRespuesta2.setEnabled(true);
-        txtRespuesta3.setEnabled(true);
-        txtNuevaContrasenia.setEnabled(true);
-        btnVerificar.setEnabled(true);
-        btnCambiarContrasenia.setEnabled(true);
+    public void cargarPreguntas(String[] preguntas, String[] respuestas) {
+        this.preguntas = preguntas;
+        this.respuestasCorrectas = respuestas;
+        this.preguntaActualIndex = 0;
+        this.intentosRestantes = 3;
+        mostrarPreguntaActual();
     }
 
-    public void limpiarCampos() {
-        txtRespuesta1.setText("");
-        txtRespuesta2.setText("");
-        txtRespuesta3.setText("");
-        txtNuevaContrasenia.setText("");
+    private void mostrarPreguntaActual() {
+        if (preguntas != null && preguntaActualIndex < preguntas.length) {
+            lblPregunta.setText(preguntas[preguntaActualIndex]);
+            txtRespuesta.setEnabled(true);
+            btnVerificar.setEnabled(true);
+        }
+    }
+
+    public boolean verificarRespuesta(String respuesta) {
+        if (respuestasCorrectas == null || preguntaActualIndex >= respuestasCorrectas.length) {
+            return false;
+        }
+
+        boolean correcta = respuesta.equals(respuestasCorrectas[preguntaActualIndex]);
+        if (!correcta) {
+            intentosRestantes--;
+            if (intentosRestantes > 0) {
+                // Rotar a la siguiente pregunta
+                preguntaActualIndex = (preguntaActualIndex + 1) % preguntas.length;
+                mostrarPreguntaActual();
+                mostrarMensaje("Respuesta incorrecta. Te quedan " + intentosRestantes + " intentos.");
+            } else {
+                // Reiniciar el ciclo
+                preguntaActualIndex = 0;
+                intentosRestantes = 3;
+                mostrarPreguntaActual();
+                mostrarMensaje("Has agotado tus intentos. El ciclo de preguntas comenzará de nuevo.");
+            }
+        }
+        return correcta;
     }
 
     // Getters para todos los campos
@@ -61,28 +77,9 @@ public class RecuperacionView extends JFrame {
         return txtUsername;
     }
 
-    public JLabel getLblPregunta1() {
-        return lblPregunta1;
-    }
 
-    public JTextField getTxtRespuesta1() {
-        return txtRespuesta1;
-    }
-
-    public JLabel getLblPregunta2() {
-        return lblPregunta2;
-    }
-
-    public JTextField getTxtRespuesta2() {
-        return txtRespuesta2;
-    }
-
-    public JLabel getLblPregunta3() {
-        return lblPregunta3;
-    }
-
-    public JTextField getTxtRespuesta3() {
-        return txtRespuesta3;
+    public JTextField getTxtRespuesta() {
+        return txtRespuesta;
     }
 
     public JPasswordField getTxtNuevaContrasenia() {
@@ -103,5 +100,13 @@ public class RecuperacionView extends JFrame {
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+
+    public void habilitarCambioContrasenia() {
+        txtNuevaContrasenia.setEnabled(true);
+        btnCambiarContrasenia.setEnabled(true);
+        txtRespuesta.setEnabled(false);
+        btnVerificar.setEnabled(false);
     }
 }

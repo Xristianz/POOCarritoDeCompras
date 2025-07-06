@@ -1,11 +1,10 @@
 package ec.edu.ups.poo.view;
 
+
 import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.PreguntaSeguridad;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class RegistroView extends JFrame {
@@ -14,88 +13,112 @@ public class RegistroView extends JFrame {
     private JTextField txtUsername;
     private JPasswordField txtContrasenia;
     private JButton btnRegistrar;
-    private JComboBox<PreguntaSeguridad> cmbPregunta1;
-    private JTextField txtRespuesta1;
-    private JComboBox<PreguntaSeguridad> cmbPregunta2;
-    private JTextField txtRespuesta2;
-    private JComboBox<PreguntaSeguridad> cmbPregunta3;
-    private JTextField txtRespuesta3;
+    private JTextField txtRespuesta;
     private JTextField txtNombre;
     private JTextField txtApellido;
     private JTextField txtCorreo;
     private JTextField txtTelefono;
     private JTextField txtFechaNacimiento;
     private JComboBox<String> cmbIdioma;
-    private JLabel lblNombre;
-    private JLabel lblApellido;
-    private JLabel lblFechaNacimiento;
-    private JLabel lblCorreo;
-    private JLabel lblTelefono;
-    private JLabel lblUsuario;
-    private JLabel lblContrasenia;
-    private JLabel lblPreguntasSeguridad;
-    private JLabel lblPregunta1;
-    private JLabel lblPregunta2;
-    private JLabel lblPregunta3;
+    private JLabel lblPreguntaActual;
+    private JButton btnGuardarRespuesta;
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+    private List<PreguntaSeguridad> preguntas;
+    private int preguntaActualIndex;
+    private int preguntasRespondidas;
+    private String[] respuestasGuardadas;
+    private int[] idsPreguntasRespondidas;
+
     public RegistroView() {
-        // Configuración inicial
         mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
         setContentPane(panelPrincipal);
-        setTitle(mensajeHandler.get("registro.titulo")); // Usar clave de properties
+        setTitle(mensajeHandler.get("registro.titulo"));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(600, 500);
         setLocationRelativeTo(null);
 
-        // Configurar eventos
+        respuestasGuardadas = new String[3];
+        idsPreguntasRespondidas = new int[3];
+        preguntasRespondidas = 0;
+
         configurarEventos();
         configurarIdiomas();
     }
 
-    private void configurarEventos() {
-        cancelarButton.addActionListener(e -> dispose());
+    private void configurarIdiomas() {
+
     }
 
-    private void configurarIdiomas() {
-        cmbIdioma.setModel(new DefaultComboBoxModel<>(new String[]{"Español", "English", "Français"}));
+    private void configurarEventos() {
+        cancelarButton.addActionListener(e -> dispose());
 
-        cmbIdioma.addActionListener(e -> {
-            String idioma = (String) cmbIdioma.getSelectedItem();
-            switch (idioma) {
-                case "Español" -> cambiarIdioma("es", "EC");
-                case "English" -> cambiarIdioma("en", "US");
-                case "Français" -> cambiarIdioma("fr", "FR");
+        btnGuardarRespuesta.addActionListener(e -> {
+            if (txtRespuesta.getText().isEmpty()) {
+                mostrarMensaje("Debe ingresar una respuesta");
+                return;
+            }
+
+            if (preguntasRespondidas < 3) {
+                respuestasGuardadas[preguntasRespondidas] = txtRespuesta.getText();
+                idsPreguntasRespondidas[preguntasRespondidas] = preguntas.get(preguntaActualIndex).getId();
+                preguntasRespondidas++;
+                txtRespuesta.setText("");
+
+                if (preguntasRespondidas < 3) {
+                    mostrarSiguientePregunta();
+                } else {
+                    lblPreguntaActual.setText("Has respondido las 3 preguntas requeridas");
+                    btnGuardarRespuesta.setEnabled(false);
+                    txtRespuesta.setEnabled(false);
+                }
             }
         });
     }
 
-    private void cambiarIdioma(String lenguaje, String pais) {
-        mensajeHandler.setLenguaje(lenguaje, pais);
-        setTitle(mensajeHandler.get("registro.titulo"));
-
-        // Actualizar todos los textos
-        cancelarButton.setText(mensajeHandler.get("registro.boton.cancelar"));
-        btnRegistrar.setText(mensajeHandler.get("registro.boton.registrar"));
-        lblNombre.setText(mensajeHandler.get("registro.label.nombre"));
-        lblApellido.setText(mensajeHandler.get("registro.label.apellido"));
-        lblFechaNacimiento.setText(mensajeHandler.get("registro.label.fecha_nacimiento"));
-        lblCorreo.setText(mensajeHandler.get("registro.label.correo"));
-        lblTelefono.setText(mensajeHandler.get("registro.label.telefono"));
-        lblUsuario.setText(mensajeHandler.get("registro.label.usuario"));
-        lblContrasenia.setText(mensajeHandler.get("registro.label.contrasenia"));
-        lblPreguntasSeguridad.setText(mensajeHandler.get("registro.label.preguntas_seguridad"));
-        lblPregunta1.setText(mensajeHandler.get("registro.label.pregunta1"));
-        lblPregunta2.setText(mensajeHandler.get("registro.label.pregunta2"));
-        lblPregunta3.setText(mensajeHandler.get("registro.label.pregunta3"));
-
-        // Actualizar textos de botones
-        btnRegistrar.setText(mensajeHandler.get("registro.boton.registrar"));
-        cancelarButton.setText(mensajeHandler.get("registro.boton.cancelar"));
-
+    public void cargarPreguntas(List<PreguntaSeguridad> preguntas) {
+        this.preguntas = preguntas;
+        this.preguntaActualIndex = 0;
+        this.preguntasRespondidas = 0;
+        mostrarSiguientePregunta();
     }
 
-    // Getters para todos los campos
+    private void mostrarSiguientePregunta() {
+        if (preguntas == null || preguntas.isEmpty()) return;
+
+        // Seleccionar una pregunta aleatoria que no haya sido respondida aún
+        int index;
+        do {
+            index = (int) (Math.random() * preguntas.size());
+        } while (yaRespondida(preguntas.get(index).getId()));
+
+        preguntaActualIndex = index;
+        lblPreguntaActual.setText(preguntas.get(preguntaActualIndex).getTexto());
+    }
+
+    private boolean yaRespondida(int preguntaId) {
+        for (int i = 0; i < preguntasRespondidas; i++) {
+            if (idsPreguntasRespondidas[i] == preguntaId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Getters para los campos...
+    public String[] getRespuestasGuardadas() {
+        return respuestasGuardadas;
+    }
+
+    public int[] getIdsPreguntasRespondidas() {
+        return idsPreguntasRespondidas;
+    }
+
+    public int getPreguntasRespondidas() {
+        return preguntasRespondidas;
+    }
+
+    // Resto de getters...
     public JTextField getTxtUsername() {
         return txtUsername;
     }
@@ -106,30 +129,6 @@ public class RegistroView extends JFrame {
 
     public JButton getBtnRegistrar() {
         return btnRegistrar;
-    }
-
-    public JComboBox<PreguntaSeguridad> getCmbPregunta1() {
-        return cmbPregunta1;
-    }
-
-    public JTextField getTxtRespuesta1() {
-        return txtRespuesta1;
-    }
-
-    public JComboBox<PreguntaSeguridad> getCmbPregunta2() {
-        return cmbPregunta2;
-    }
-
-    public JTextField getTxtRespuesta2() {
-        return txtRespuesta2;
-    }
-
-    public JComboBox<PreguntaSeguridad> getCmbPregunta3() {
-        return cmbPregunta3;
-    }
-
-    public JTextField getTxtRespuesta3() {
-        return txtRespuesta3;
     }
 
     public JTextField getTxtNombre() {
@@ -164,29 +163,9 @@ public class RegistroView extends JFrame {
         txtCorreo.setText("");
         txtTelefono.setText("");
         txtFechaNacimiento.setText("");
-        txtRespuesta1.setText("");
-        txtRespuesta2.setText("");
-        txtRespuesta3.setText("");
-        cmbPregunta1.setSelectedIndex(0);
-        cmbPregunta2.setSelectedIndex(0);
-        cmbPregunta3.setSelectedIndex(0);
-    }
-
-    public void cargarPreguntas(List<PreguntaSeguridad> preguntas) {
-        // Crear modelos independientes para cada ComboBox
-        DefaultComboBoxModel<PreguntaSeguridad> modelo1 = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<PreguntaSeguridad> modelo2 = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<PreguntaSeguridad> modelo3 = new DefaultComboBoxModel<>();
-
-        for (PreguntaSeguridad pregunta : preguntas) {
-            // Crear nuevas instancias para cada modelo
-            modelo1.addElement(new PreguntaSeguridad(pregunta.getId(), pregunta.getTexto()));
-            modelo2.addElement(new PreguntaSeguridad(pregunta.getId(), pregunta.getTexto()));
-            modelo3.addElement(new PreguntaSeguridad(pregunta.getId(), pregunta.getTexto()));
-        }
-
-        cmbPregunta1.setModel(modelo1);
-        cmbPregunta2.setModel(modelo2);
-        cmbPregunta3.setModel(modelo3);
+        txtRespuesta.setText("");
+        preguntasRespondidas = 0;
+        respuestasGuardadas = new String[3];
+        idsPreguntasRespondidas = new int[3];
     }
 }
