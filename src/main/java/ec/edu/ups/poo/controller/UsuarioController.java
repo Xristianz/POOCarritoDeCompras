@@ -3,6 +3,7 @@ package ec.edu.ups.poo.controller;
 import ec.edu.ups.poo.DAO.PreguntaSeguridadDAO;
 import ec.edu.ups.poo.DAO.RespuestaSeguridadDAO;
 import ec.edu.ups.poo.DAO.UsuarioDAO;
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.*;
 import ec.edu.ups.poo.view.LoginView;
 import ec.edu.ups.poo.view.RecuperacionView;
@@ -27,6 +28,7 @@ public class UsuarioController {
     private UsuarioAnadir usuarioAnadirView;
     private UsuarioActualizar usuarioActualizarView;
     private UsuarioView usuarioView;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
     public UsuarioController(UsuarioDAO usuarioDAO, PreguntaSeguridadDAO preguntaSeguridadDAO,
                              RespuestaSeguridadDAO respuestaSeguridadDAO, LoginView loginView) {
@@ -38,7 +40,6 @@ public class UsuarioController {
         configurarEventosEnVistas();
     }
 
-    // ==================== CONFIGURACIÓN DE EVENTOS ====================
     private void configurarEventosEnVistas() {
         configurarEventosLogin();
     }
@@ -66,7 +67,6 @@ public class UsuarioController {
         });
     }
 
-    // ==================== MÉTODOS DE REGISTRO ====================
     private void mostrarVentanaRegistro() {
         registroView = new RegistroView();
         registroView.setVisible(true);
@@ -91,17 +91,17 @@ public class UsuarioController {
 
         if (username.isEmpty() || contrasenia.isEmpty() || nombre.isEmpty() || apellido.isEmpty() ||
                 correo.isEmpty() || telefono.isEmpty() || fechaNacimiento.isEmpty()) {
-            registroView.mostrarMensaje("Todos los campos son requeridos");
+            registroView.mostrarMensaje(registroView.getMensajeHandler().get("mensaje.campos_requeridos"));
             return;
         }
 
         if (registroView.getPreguntasRespondidas() < 3) {
-            registroView.mostrarMensaje("Debe responder las 3 preguntas de seguridad");
+            registroView.mostrarMensaje(registroView.getMensajeHandler().get("mensaje.preguntas_requeridas"));
             return;
         }
 
         if (usuarioDAO.buscarPorUsername(username) != null) {
-            registroView.mostrarMensaje("El usuario ya existe");
+            registroView.mostrarMensaje(registroView.getMensajeHandler().get("mensaje.usuario_existe"));
             return;
         }
 
@@ -120,12 +120,11 @@ public class UsuarioController {
             respuestaSeguridadDAO.crear(respuesta);
         }
 
-        registroView.mostrarMensaje("Usuario registrado exitosamente");
+        registroView.mostrarMensaje(registroView.getMensajeHandler().get("mensaje.registro_exitoso"));
         registroView.limpiarCampos();
         registroView.dispose();
     }
 
-    // ==================== MÉTODOS DE RECUPERACIÓN ====================
     private void mostrarVentanaRecuperacion() {
         recuperacionView = new RecuperacionView();
         recuperacionView.setVisible(true);
@@ -157,13 +156,13 @@ public class UsuarioController {
         Usuario usuario = usuarioDAO.buscarPorUsername(username);
 
         if (usuario == null) {
-            recuperacionView.mostrarMensaje("Usuario no encontrado");
+            recuperacionView.mostrarMensaje(recuperacionView.getMensajeHandler().get("mensaje.usuario_no_encontrado"));
             return;
         }
 
         List<RespuestaSeguridad> respuestas = respuestaSeguridadDAO.listarPorUsuario(username);
         if (respuestas.size() < 3) {
-            recuperacionView.mostrarMensaje("No se encontraron suficientes preguntas de seguridad");
+            recuperacionView.mostrarMensaje(recuperacionView.getMensajeHandler().get("mensaje.preguntas_insuficientes"));
             return;
         }
 
@@ -173,7 +172,7 @@ public class UsuarioController {
         for (int i = 0; i < 3; i++) {
             RespuestaSeguridad respuesta = respuestas.get(i);
             PreguntaSeguridad pregunta = preguntaSeguridadDAO.buscarPorId(respuesta.getPreguntaId());
-            textosPreguntas[i] = pregunta.getTexto();
+            textosPreguntas[i] = pregunta.getTexto(recuperacionView.getMensajeHandler());
             textosRespuestas[i] = respuesta.getRespuesta();
         }
 
@@ -185,12 +184,12 @@ public class UsuarioController {
         String respuesta = recuperacionView.getTxtRespuesta().getText();
 
         if (respuesta.isEmpty()) {
-            recuperacionView.mostrarMensaje("Ingrese una respuesta");
+            recuperacionView.mostrarMensaje(recuperacionView.getMensajeHandler().get("mensaje.respuesta_requerida"));
             return;
         }
 
         if (recuperacionView.verificarRespuesta(respuesta)) {
-            recuperacionView.mostrarMensaje("Respuesta correcta. Ahora puede cambiar su contraseña.");
+            recuperacionView.mostrarMensaje(recuperacionView.getMensajeHandler().get("mensaje.respuesta_correcta"));
             recuperacionView.habilitarCambioContrasenia();
         }
     }
@@ -200,7 +199,7 @@ public class UsuarioController {
         String nuevaContrasenia = new String(recuperacionView.getTxtNuevaContrasenia().getPassword());
 
         if (nuevaContrasenia.isEmpty()) {
-            recuperacionView.mostrarMensaje("Ingrese una nueva contraseña");
+            recuperacionView.mostrarMensaje(recuperacionView.getMensajeHandler().get("mensaje.contrasenia_requerida"));
             return;
         }
 
@@ -208,14 +207,13 @@ public class UsuarioController {
         if (usuario != null) {
             usuario.setContrasenia(nuevaContrasenia);
             usuarioDAO.actualizar(usuario);
-            recuperacionView.mostrarMensaje("Contraseña cambiada exitosamente");
+            recuperacionView.mostrarMensaje(recuperacionView.getMensajeHandler().get("mensaje.contrasenia_cambiada"));
             recuperacionView.dispose();
         } else {
-            recuperacionView.mostrarMensaje("Usuario no encontrado");
+            recuperacionView.mostrarMensaje(recuperacionView.getMensajeHandler().get("mensaje.usuario_no_encontrado"));
         }
     }
 
-    // ==================== MÉTODOS DE ADMINISTRACIÓN ====================
     public void configurarEventosUsuarioAnadir(UsuarioAnadir view) {
         this.usuarioAnadirView = view;
 
@@ -240,17 +238,17 @@ public class UsuarioController {
 
         if (username.isEmpty() || contrasenia.isEmpty() || nombre.isEmpty() || apellido.isEmpty() ||
                 correo.isEmpty() || telefono.isEmpty() || fechaNacimiento.isEmpty()) {
-            usuarioAnadirView.mostrarMensaje("Todos los campos son requeridos");
+            usuarioAnadirView.mostrarMensaje(usuarioAnadirView.getMensajeHandler().get("mensaje.campos_requeridos"));
             return;
         }
 
         if (usuarioAnadirView.getPreguntasRespondidas() < 3) {
-            usuarioAnadirView.mostrarMensaje("Debe responder las 3 preguntas de seguridad");
+            usuarioAnadirView.mostrarMensaje(usuarioAnadirView.getMensajeHandler().get("mensaje.preguntas_requeridas"));
             return;
         }
 
         if (usuarioDAO.buscarPorUsername(username) != null) {
-            usuarioAnadirView.mostrarMensaje("El usuario ya existe");
+            usuarioAnadirView.mostrarMensaje(usuarioAnadirView.getMensajeHandler().get("mensaje.usuario_existe"));
             return;
         }
 
@@ -269,7 +267,7 @@ public class UsuarioController {
             respuestaSeguridadDAO.crear(respuesta);
         }
 
-        usuarioAnadirView.mostrarMensaje("Usuario agregado exitosamente");
+        usuarioAnadirView.mostrarMensaje(usuarioAnadirView.getMensajeHandler().get("mensaje.usuario_agregado"));
         usuarioAnadirView.limpiarCampos();
     }
 
@@ -298,7 +296,7 @@ public class UsuarioController {
         Usuario usuario = usuarioDAO.buscarPorUsername(username);
 
         if (usuario == null) {
-            usuarioActualizarView.mostrarMensaje("Usuario no encontrado");
+            usuarioActualizarView.mostrarMensaje(usuarioActualizarView.getMensajeHandler().get("mensaje.usuario_no_encontrado"));
             return;
         }
 
@@ -316,12 +314,12 @@ public class UsuarioController {
         String nuevaContrasenia = usuarioActualizarView.getNuevaContrasenia();
 
         if (usuarioActualizarView.getPreguntasRespondidas() < 3) {
-            usuarioActualizarView.mostrarMensaje("Debe responder las 3 preguntas de seguridad");
+            usuarioActualizarView.mostrarMensaje(usuarioActualizarView.getMensajeHandler().get("mensaje.preguntas_requeridas"));
             return;
         }
 
         if (nuevaContrasenia.isEmpty()) {
-            usuarioActualizarView.mostrarMensaje("Ingrese una nueva contraseña");
+            usuarioActualizarView.mostrarMensaje(usuarioActualizarView.getMensajeHandler().get("mensaje.contrasenia_requerida"));
             return;
         }
 
@@ -330,10 +328,8 @@ public class UsuarioController {
             usuario.setContrasenia(nuevaContrasenia);
             usuarioDAO.actualizar(usuario);
 
-            // Eliminar respuestas antiguas
             respuestaSeguridadDAO.eliminarPorUsuario(username);
 
-            // Agregar nuevas respuestas
             String[] respuestas = usuarioActualizarView.getRespuestasGuardadas();
             int[] idsPreguntas = usuarioActualizarView.getIdsPreguntasRespondidas();
 
@@ -342,10 +338,10 @@ public class UsuarioController {
                 respuestaSeguridadDAO.crear(respuesta);
             }
 
-            usuarioActualizarView.mostrarMensaje("Usuario actualizado exitosamente");
+            usuarioActualizarView.mostrarMensaje(usuarioActualizarView.getMensajeHandler().get("mensaje.usuario_actualizado"));
             usuarioActualizarView.limpiarCampos();
         } else {
-            usuarioActualizarView.mostrarMensaje("Usuario no encontrado");
+            usuarioActualizarView.mostrarMensaje(usuarioActualizarView.getMensajeHandler().get("mensaje.usuario_no_encontrado"));
         }
     }
 
@@ -376,56 +372,49 @@ public class UsuarioController {
         String username = usuarioView.getTxtUsername().getText();
 
         if (username.isEmpty()) {
-            usuarioView.mostrarMensaje("Ingrese un username para eliminar");
+            usuarioView.mostrarMensaje(usuarioView.getMensajeHandler().get("mensaje.username_requerido"));
             return;
         }
 
-        // Verificar si el usuario existe
         Usuario usuario = usuarioDAO.buscarPorUsername(username);
         if (usuario == null) {
-            usuarioView.mostrarMensaje("Usuario no encontrado");
+            usuarioView.mostrarMensaje(usuarioView.getMensajeHandler().get("mensaje.usuario_no_encontrado"));
             return;
         }
 
-        // Confirmar eliminación
         int confirmacion = JOptionPane.showConfirmDialog(
                 usuarioView,
-                "¿Está seguro que desea eliminar al usuario " + username + "?",
-                "Confirmar eliminación",
+                usuarioView.getMensajeHandler().get("mensaje.confirmar_eliminar") + " " + username + "?",
+                usuarioView.getMensajeHandler().get("titulo.confirmar"),
                 JOptionPane.YES_NO_OPTION
         );
 
         if (confirmacion == JOptionPane.YES_OPTION) {
             try {
-                // Eliminar el usuario (esto automáticamente eliminará sus carritos según tu DAO)
                 usuarioDAO.eliminar(username);
-
-                // También eliminar las respuestas de seguridad asociadas
                 respuestaSeguridadDAO.eliminarPorUsuario(username);
 
-                usuarioView.mostrarMensaje("Usuario eliminado exitosamente");
+                usuarioView.mostrarMensaje(usuarioView.getMensajeHandler().get("mensaje.usuario_eliminado"));
                 usuarioView.getTxtUsername().setText("");
-                listarUsuarios(); // Actualizar la lista
+                listarUsuarios();
             } catch (Exception e) {
-                usuarioView.mostrarMensaje("Error al eliminar el usuario: " + e.getMessage());
+                usuarioView.mostrarMensaje(usuarioView.getMensajeHandler().get("mensaje.error_eliminar") + ": " + e.getMessage());
             }
         }
     }
 
-    // ==================== MÉTODOS DE AUTENTICACIÓN ====================
     private void autenticar() {
         String username = loginView.getTxtUsername().getText();
         String contrasenia = loginView.getTxtContrasenia().getText();
 
         usuario = usuarioDAO.autenticar(username, contrasenia);
         if (usuario == null) {
-            loginView.mostrarMensaje("Usuario o contraseña incorrectos.");
+            loginView.mostrarMensaje(loginView.getMensajeHandler().get("mensaje.credenciales_incorrectas"));
         } else {
             loginView.dispose();
         }
     }
 
-    // ==================== GETTERS Y MÉTODOS AUXILIARES ====================
     public Usuario getUsuarioAutenticado() {
         return usuario;
     }
@@ -433,4 +422,5 @@ public class UsuarioController {
     public void cerrarSesion() {
         this.usuario = null;
     }
+
 }

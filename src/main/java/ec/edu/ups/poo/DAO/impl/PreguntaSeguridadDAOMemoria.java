@@ -10,25 +10,23 @@ public class PreguntaSeguridadDAOMemoria implements PreguntaSeguridadDAO {
 
     public PreguntaSeguridadDAOMemoria() {
         preguntas = new ArrayList<>();
-        // Agregamos 10 preguntas de seguridad
-        preguntas.add(new PreguntaSeguridad(1, "¿Cuál es el nombre de tu primera mascota?"));
-        preguntas.add(new PreguntaSeguridad(2, "¿Cuál es tu ciudad de nacimiento?"));
-        preguntas.add(new PreguntaSeguridad(3, "¿Cuál es tu color favorito?"));
-        preguntas.add(new PreguntaSeguridad(4, "¿Cuál es el nombre de tu mejor amigo de la infancia?"));
-        preguntas.add(new PreguntaSeguridad(5, "¿Cuál es tu comida favorita?"));
-        preguntas.add(new PreguntaSeguridad(6, "¿Cuál es el nombre de tu profesor favorito?"));
-        preguntas.add(new PreguntaSeguridad(7, "¿Cuál es tu película favorita?"));
-        preguntas.add(new PreguntaSeguridad(8, "¿Cuál es el nombre de tu primer colegio?"));
-        preguntas.add(new PreguntaSeguridad(9, "¿Cuál es tu deporte favorito?"));
-        preguntas.add(new PreguntaSeguridad(10, "¿Cuál es el nombre de tu abuela materna?"));
+        // Agregamos 10 preguntas de seguridad con claves de internacionalización
+        preguntas.add(new PreguntaSeguridad(1, "pregunta.mascota"));
+        preguntas.add(new PreguntaSeguridad(2, "pregunta.ciudad"));
+        preguntas.add(new PreguntaSeguridad(3, "pregunta.color"));
+        preguntas.add(new PreguntaSeguridad(4, "pregunta.amigo"));
+        preguntas.add(new PreguntaSeguridad(5, "pregunta.comida"));
+        preguntas.add(new PreguntaSeguridad(6, "pregunta.profesor"));
+        preguntas.add(new PreguntaSeguridad(7, "pregunta.pelicula"));
+        preguntas.add(new PreguntaSeguridad(8, "pregunta.colegio"));
+        preguntas.add(new PreguntaSeguridad(9, "pregunta.deporte"));
+        preguntas.add(new PreguntaSeguridad(10, "pregunta.abuela"));
     }
 
     @Override
     public List<PreguntaSeguridad> listarTodas() {
         return preguntas;
     }
-
-
 
     @Override
     public PreguntaSeguridad buscarPorId(int id) {

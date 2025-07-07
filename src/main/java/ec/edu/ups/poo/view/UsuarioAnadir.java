@@ -1,7 +1,10 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.PreguntaSeguridad;
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,15 +23,34 @@ public class UsuarioAnadir extends JInternalFrame {
     private JButton btnGuardarRespuesta;
     private JButton btnAgregarUsuario;
     private JButton btnCancelar;
+    private JLabel agregarUsuarios;
+    private JLabel preguntasDeSeguridad;
+    private JLabel lblContrasenia;
+    private JLabel lblTelefono;
+    private JLabel lblCorreo;
+    private JLabel lblApelido;
+    private JLabel lblNombre;
+    private JLabel lblUsername;
+    private JLabel lblFechaDeNacimiento;
 
     private List<PreguntaSeguridad> preguntas;
     private int preguntaActualIndex;
     private int preguntasRespondidas;
     private String[] respuestasGuardadas;
     private int[] idsPreguntasRespondidas;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
     public UsuarioAnadir() {
+
         super("Agregar Usuario", true, true, false, true);
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
+        mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(600, 500);
@@ -37,7 +59,72 @@ public class UsuarioAnadir extends JInternalFrame {
         idsPreguntasRespondidas = new int[3];
         preguntasRespondidas = 0;
 
+        internacionalizar();
         configurarEventos();
+        configurarIconos();
+
+    }
+    private void configurarIconos() {
+
+        Dimension iconSize = new Dimension(30, 30);
+
+        ImageIcon agregarIcon = cargarIcono("/imagenes/agregar-usuario.png", iconSize);
+        ImageIcon cancelarIcon = cargarIcono("/imagenes/revolver.png", iconSize);
+        ImageIcon guardarIcon = cargarIcono("/imagenes/agregar.png", iconSize);
+
+
+        btnAgregarUsuario.setIcon(agregarIcon);
+        btnCancelar.setIcon(cancelarIcon);
+        btnGuardarRespuesta.setIcon(guardarIcon);
+
+
+        btnAgregarUsuario.setIconTextGap(10);
+        btnCancelar.setIconTextGap(10);
+        btnGuardarRespuesta.setIconTextGap(10);
+
+
+        btnAgregarUsuario.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnCancelar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnGuardarRespuesta.setHorizontalTextPosition(SwingConstants.RIGHT);
+
+        btnAgregarUsuario.setToolTipText("Guardar nuevo usuario");
+        btnCancelar.setToolTipText("Cancelar operación");
+        btnGuardarRespuesta.setToolTipText("Guardar respuesta de seguridad");
+    }
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+
+                Image scaledImage = originalIcon.getImage().getScaledInstance(
+                        size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            } else {
+                System.err.println("No se encontró el archivo de icono: " + ruta);
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cargar el icono: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void internacionalizar() {
+        setTitle(mensajeHandler.get("anadir.titulo"));
+        agregarUsuarios.setText(mensajeHandler.get("anadir.titulo"));
+        preguntasDeSeguridad.setText(mensajeHandler.get("anadir.preguntas"));
+        btnAgregarUsuario.setText(mensajeHandler.get("anadir.boton.agregar"));
+        btnCancelar.setText(mensajeHandler.get("anadir.boton.cancelar"));
+        btnGuardarRespuesta.setText(mensajeHandler.get("anadir.boton.guardar"));
+        lblUsername.setText(mensajeHandler.get("anadir.username"));
+        lblNombre.setText(mensajeHandler.get("anadir.nombre"));
+        lblApelido.setText(mensajeHandler.get("anadir.apellido"));
+        lblCorreo.setText(mensajeHandler.get("anadir.correo"));
+        lblTelefono.setText(mensajeHandler.get("anadir.telefono"));
+        lblFechaDeNacimiento.setText(mensajeHandler.get("anadir.fecha_nacimiento"));
+        lblContrasenia.setText(mensajeHandler.get("anadir.contrasenia"));
     }
 
     private void configurarEventos() {
@@ -52,7 +139,7 @@ public class UsuarioAnadir extends JInternalFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (txtRespuesta.getText().isEmpty()) {
-                    mostrarMensaje("Debe ingresar una respuesta");
+                    mostrarMensaje(mensajeHandler.get("anadir.mensaje.respuesta_requerida"));
                     return;
                 }
 
@@ -65,7 +152,7 @@ public class UsuarioAnadir extends JInternalFrame {
                     if (preguntasRespondidas < 3) {
                         mostrarSiguientePregunta();
                     } else {
-                        lblPreguntaActual.setText("Has respondido las 3 preguntas requeridas");
+                        lblPreguntaActual.setText(mensajeHandler.get("anadir.mensaje.preguntas_completas"));
                         btnGuardarRespuesta.setEnabled(false);
                         txtRespuesta.setEnabled(false);
                     }
@@ -83,7 +170,14 @@ public class UsuarioAnadir extends JInternalFrame {
 
     private void mostrarSiguientePregunta() {
         if (preguntas == null || preguntas.isEmpty()) {
-            lblPreguntaActual.setText("No hay preguntas disponibles");
+            lblPreguntaActual.setText(mensajeHandler.get("anadir.sin_preguntas"));
+            return;
+        }
+
+        if (preguntasRespondidas >= 3) {
+            lblPreguntaActual.setText(mensajeHandler.get("anadir.preguntas_completas"));
+            btnGuardarRespuesta.setEnabled(false);
+            txtRespuesta.setEnabled(false);
             return;
         }
 
@@ -93,7 +187,7 @@ public class UsuarioAnadir extends JInternalFrame {
         } while (yaRespondida(preguntas.get(index).getId()));
 
         preguntaActualIndex = index;
-        lblPreguntaActual.setText(preguntas.get(preguntaActualIndex).getTexto());
+        lblPreguntaActual.setText(preguntas.get(preguntaActualIndex).getTexto(mensajeHandler));
     }
 
     private boolean yaRespondida(int preguntaId) {
@@ -173,5 +267,9 @@ public class UsuarioAnadir extends JInternalFrame {
         if (preguntas != null && !preguntas.isEmpty()) {
             mostrarSiguientePregunta();
         }
+    }
+
+    public MensajeInternacionalizacionHandler getMensajeHandler() {
+        return mensajeHandler;
     }
 }

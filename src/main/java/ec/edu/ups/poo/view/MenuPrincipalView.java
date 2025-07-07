@@ -34,7 +34,6 @@ public class MenuPrincipalView extends JFrame {
     private MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler;
     private JMenuItem menuItemActualizarCarrito;
     private JMenuItem menuItemEliminarCarrito;
-    private MensajeInternacionalizacionHandler mensajeHandler;
 
     public MenuPrincipalView() {
         mensajeInternacionalizacionHandler = new MensajeInternacionalizacionHandler("es", "EC");
@@ -168,6 +167,9 @@ public class MenuPrincipalView extends JFrame {
     public JMenuItem getMenuItemEliminarCarrito() {
         return menuItemEliminarCarrito;
     }
+    public MensajeInternacionalizacionHandler getMensajeInternacionalizacionHandler() {
+        return mensajeInternacionalizacionHandler;
+    }
 
 
     public void deshabilitarMenusAdministrador() {
@@ -186,7 +188,7 @@ public class MenuPrincipalView extends JFrame {
         return menuItemGestionUsuarios;
     }
     private void initComponents() {
-        jDesktopPane = new JDesktopPane();
+        jDesktopPane = new MiJDesktopPane();
         menuBar = new JMenuBar();
 
         menuProducto = new JMenu(mensajeInternacionalizacionHandler.get("menu.producto"));
@@ -287,6 +289,7 @@ public class MenuPrincipalView extends JFrame {
 
 
     }
+
 
 
 }

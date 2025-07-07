@@ -3,6 +3,8 @@ package ec.edu.ups.poo.view;
 import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 public class LoginView extends JFrame {
     private JPanel panelSecundario;
@@ -17,28 +19,65 @@ public class LoginView extends JFrame {
 
 
     private JComboBox<String> cmbIdioma;
+    private JLabel lblIniciarSesion;
 
     private MensajeInternacionalizacionHandler mensajeHandler;
 
     public LoginView() {
-        // 1. Configuración básica del JFrame
         mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
+        panelPrincipal.setBackground(Color.WHITE);
+        panelPrincipal.setForeground(Color.BLACK);
+
         setTitle(mensajeHandler.get("login.titulo"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
-
-        // 2. Cargar componentes del GUI Designer (automático)
         setContentPane(panelPrincipal);
-
-        // 3. Configurar el ComboBox (ya agregado en el .form)
         configurarIdiomas();
+        configurarIconos();
+    }
+    private void configurarIconos() {
+        Dimension iconSize = new Dimension(25, 25);
+
+        ImageIcon loginIcon = cargarIcono("/imagenes/iniciar-sesion.png", iconSize);
+        ImageIcon registerIcon = cargarIcono("/imagenes/agregar-usuario.png", iconSize);
+        ImageIcon forgotIcon = cargarIcono("/imagenes/restablecer-la-contrasena.png", iconSize);
+
+
+        btnIniciarSesion.setIcon(loginIcon);
+        btnRegistrarse.setIcon(registerIcon);
+        olvidoSuContraseniaButton.setIcon(forgotIcon);
+
+
+        btnIniciarSesion.setIconTextGap(10);
+        btnRegistrarse.setIconTextGap(10);
+        olvidoSuContraseniaButton.setIconTextGap(10);
+
+        btnIniciarSesion.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnRegistrarse.setHorizontalTextPosition(SwingConstants.RIGHT);
+        olvidoSuContraseniaButton.setHorizontalTextPosition(SwingConstants.RIGHT);
+    }
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(
+                        size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            } else {
+                System.err.println("No se encontró el archivo de icono: " + ruta);
+                return null;
+            }
+        } catch (Exception e) {
+            System.err.println("Error al cargar el icono: " + e.getMessage());
+            return null;
+        }
     }
 
-    private void configurarIdiomas() {
-        // Asegúrate de que cmbIdioma fue agregado en el GUI Designer
-        cmbIdioma.setModel(new DefaultComboBoxModel<>(new String[]{"Español", "English", "Français"}));
 
+    private void configurarIdiomas() {
+        cmbIdioma.setModel(new DefaultComboBoxModel<>(new String[]{"Español", "English", "Français"}));
         cmbIdioma.addActionListener(e -> {
             String idioma = (String) cmbIdioma.getSelectedItem();
             switch (idioma) {
@@ -127,5 +166,8 @@ public class LoginView extends JFrame {
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+    public MensajeInternacionalizacionHandler getMensajeHandler() {
+        return mensajeHandler;
     }
 }

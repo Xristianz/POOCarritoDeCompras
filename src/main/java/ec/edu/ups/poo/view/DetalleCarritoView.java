@@ -5,6 +5,7 @@ import ec.edu.ups.poo.models.Carrito;
 import ec.edu.ups.poo.models.ItemCarrito;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
 public class DetalleCarritoView extends JInternalFrame {
     private JTable tblDetalles;
@@ -13,7 +14,14 @@ public class DetalleCarritoView extends JInternalFrame {
     private MensajeInternacionalizacionHandler mensajeInternacionalizacion;
 
     public DetalleCarritoView() {
-        super("", true, true, true, true); // Título se establecerá en actualizarTextos()
+        super("", true, true, true, true);
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
         setContentPane(panelPrincipal);
         setSize(600, 400);
 

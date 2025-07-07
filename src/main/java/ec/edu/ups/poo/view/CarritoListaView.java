@@ -4,6 +4,8 @@ import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.Carrito;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -17,16 +19,22 @@ public class CarritoListaView extends JInternalFrame {
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mensajeInternacionalizacion;
 
-    // Labels
     private JLabel lblBuscar;
 
     public CarritoListaView() {
-        super("", true, true, true, true); // Título se establecerá en actualizarTextos()
+        super("", true, true, true, true);
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(600, 400);
 
-        // Configurar internacionalización
+
         this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
 
         modelo = new DefaultTableModel() {
@@ -38,8 +46,39 @@ public class CarritoListaView extends JInternalFrame {
         modelo.setColumnIdentifiers(new Object[]{"Código", "Usuario", "Fecha", "Total"});
         tblCarritos.setModel(modelo);
 
-        // Actualizar textos
+
         actualizarTextos();
+        configurarIconos();
+    }
+    private void configurarIconos() {
+        Dimension iconSize = new Dimension(30, 30);
+
+        btnBuscar.setIcon(cargarIcono("/imagenes/revolver.png", iconSize));
+        btnListar.setIcon(cargarIcono("/imagenes/lista-de-verificacion.png", iconSize));
+        btnVerDetalles.setIcon(cargarIcono("/imagenes/buscar.png", iconSize));
+
+        btnBuscar.setIconTextGap(10);
+        btnListar.setIconTextGap(10);
+        btnVerDetalles.setIconTextGap(10);
+
+
+        btnBuscar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnListar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnVerDetalles.setHorizontalTextPosition(SwingConstants.RIGHT);
+    }
+
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void actualizarTextos() {

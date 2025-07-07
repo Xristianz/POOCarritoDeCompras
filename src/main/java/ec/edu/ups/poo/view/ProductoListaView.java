@@ -5,6 +5,8 @@ import ec.edu.ups.poo.models.Producto;
 import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,6 +21,13 @@ public class ProductoListaView extends JInternalFrame {
 
     public ProductoListaView() {
         super("", true, true, false, true);
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(600, 400);
@@ -37,6 +46,32 @@ public class ProductoListaView extends JInternalFrame {
         tblProductos.setModel(modelo);
         this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
         actualizarTextos();
+        configurarIconos();
+    }
+    private void configurarIconos() {
+        Dimension iconSize = new Dimension(30, 30);
+        btnBuscar.setIcon(cargarIcono("/imagenes/reticulo.png", iconSize));
+        btnListar.setIcon(cargarIcono("/imagenes/lista-de-verificacion.png", iconSize));
+
+        btnBuscar.setIconTextGap(10);
+        btnListar.setIconTextGap(10);
+
+        btnBuscar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnListar.setHorizontalTextPosition(SwingConstants.RIGHT);
+    }
+
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void actualizarTextos() {

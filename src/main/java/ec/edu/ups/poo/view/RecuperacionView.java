@@ -1,6 +1,10 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 public class RecuperacionView extends JFrame {
     private JPanel panelPrincipal;
@@ -11,6 +15,12 @@ public class RecuperacionView extends JFrame {
     private JButton btnVerificar;
     private JButton btnCambiarContrasenia;
     private JButton btnBuscar;
+    private JLabel nuevaContrasenia;
+    private JLabel preguntaDeSeguridad;
+    private JLabel recuperacionDeContrasenia;
+    private JLabel lblUsername;
+    private JComboBox<String> cmbIdioma;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
     private String[] preguntas;
     private String[] respuestasCorrectas;
@@ -18,11 +28,23 @@ public class RecuperacionView extends JFrame {
     private int intentosRestantes;
 
     public RecuperacionView() {
+        mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
         setContentPane(panelPrincipal);
-        setTitle("Recuperación de Contraseña");
+        setTitle(mensajeHandler.get("recuperacion.titulo"));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 300);
         setLocationRelativeTo(null);
+        cmbIdioma.addItem("Español");
+        cmbIdioma.addItem("English");
+        cmbIdioma.addItem("Français");
+        cmbIdioma.addActionListener(e -> cambiarIdioma());
 
         // Inicialmente deshabilitamos los campos hasta que se busque el usuario
         lblPregunta.setText("Ingrese su nombre de usuario y presione Buscar");
@@ -30,7 +52,60 @@ public class RecuperacionView extends JFrame {
         txtNuevaContrasenia.setEnabled(false);
         btnVerificar.setEnabled(false);
         btnCambiarContrasenia.setEnabled(false);
+
+        configurarIconos();
+        internacionalizar();
     }
+    private void configurarIconos() {
+        Dimension iconSize = new Dimension(30, 30);
+        btnBuscar.setIcon(cargarIcono("/imagenes/reticulo.png", iconSize));
+        btnVerificar.setIcon(cargarIcono("/imagenes/agregar.png", iconSize));
+        btnCambiarContrasenia.setIcon(cargarIcono("/imagenes/restablecer-la-contrasena.png", iconSize));
+
+        btnBuscar.setIconTextGap(10);
+        btnVerificar.setIconTextGap(10);
+        btnCambiarContrasenia.setIconTextGap(10);
+
+        btnBuscar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnVerificar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnCambiarContrasenia.setHorizontalTextPosition(SwingConstants.RIGHT);
+    }
+
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    private void cambiarIdioma() {
+        String idioma = cmbIdioma.getSelectedItem().toString();
+        if (idioma.equals("English")) {
+            mensajeHandler = new MensajeInternacionalizacionHandler("en", "US");
+        } else if (idioma.equals("Français")) {
+            mensajeHandler = new MensajeInternacionalizacionHandler("fr", "FR");
+        } else {
+            mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
+        }
+        internacionalizar();
+    }
+    private void internacionalizar() {
+        setTitle(mensajeHandler.get("recuperacion.titulo"));
+        recuperacionDeContrasenia.setText(mensajeHandler.get("recuperacion.titulo"));
+        recuperacionDeContrasenia.setText(mensajeHandler.get("recuperacion.titulo"));
+        preguntaDeSeguridad.setText(mensajeHandler.get("recuperacion.pregunta"));
+        nuevaContrasenia.setText(mensajeHandler.get("recuperacion.nueva_contrasenia"));
+        btnBuscar.setText(mensajeHandler.get("recuperacion.boton.buscar"));
+        btnVerificar.setText(mensajeHandler.get("recuperacion.boton.verificar"));
+        btnCambiarContrasenia.setText(mensajeHandler.get("recuperacion.boton.cambiar"));
+    }
+
 
     public void cargarPreguntas(String[] preguntas, String[] respuestas) {
         this.preguntas = preguntas;
@@ -60,18 +135,17 @@ public class RecuperacionView extends JFrame {
                 // Rotar a la siguiente pregunta
                 preguntaActualIndex = (preguntaActualIndex + 1) % preguntas.length;
                 mostrarPreguntaActual();
-                mostrarMensaje("Respuesta incorrecta. Te quedan " + intentosRestantes + " intentos.");
+                mostrarMensaje(mensajeHandler.get("recuperacion.respuesta_incorrecta") + " " + intentosRestantes + " " + mensajeHandler.get("recuperacion.intentos_restantes"));
             } else {
                 // Reiniciar el ciclo
                 preguntaActualIndex = 0;
                 intentosRestantes = 3;
                 mostrarPreguntaActual();
-                mostrarMensaje("Has agotado tus intentos. El ciclo de preguntas comenzará de nuevo.");
+                mostrarMensaje(mensajeHandler.get("recuperacion.intentos_agotados"));
             }
         }
         return correcta;
     }
-
     // Getters para todos los campos
     public JTextField getTxtUsername() {
         return txtUsername;
@@ -108,5 +182,8 @@ public class RecuperacionView extends JFrame {
         btnCambiarContrasenia.setEnabled(true);
         txtRespuesta.setEnabled(false);
         btnVerificar.setEnabled(false);
+    }
+    public MensajeInternacionalizacionHandler getMensajeHandler() {
+        return mensajeHandler;
     }
 }

@@ -5,6 +5,8 @@ import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.net.URL;
 
 public class CarritoAnadirView extends JInternalFrame {
     private JButton btnBuscar;
@@ -35,7 +37,14 @@ public class CarritoAnadirView extends JInternalFrame {
     private JLabel lblTotal;
 
     public CarritoAnadirView() {
-        super("", true, true, false, true); // El título se establecerá en actualizarTextos()
+        super("", true, true, false, true);
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(600, 500);
@@ -69,6 +78,46 @@ public class CarritoAnadirView extends JInternalFrame {
 
         // Actualizar textos con el idioma inicial
         actualizarTextos();
+        configurarIconos();
+    }
+
+    private void configurarIconos() {
+        Dimension iconSize = new Dimension(30, 30);
+
+        btnBuscar.setIcon(cargarIcono("/imagenes/buscar.png", iconSize));
+        btnAnadir.setIcon(cargarIcono("/imagenes/agregar.png", iconSize));
+        btnGuardar.setIcon(cargarIcono("/imagenes/compras.png", iconSize));
+        btnLimpiar.setIcon(cargarIcono("/imagenes/carro-vacio.png", iconSize));
+        btnEliminarItem.setIcon(cargarIcono("/imagenes/eliminar-producto.png", iconSize));
+        btnActualizarCantidad.setIcon(cargarIcono("/imagenes/lista-de-verificacion.png", iconSize));
+
+        btnBuscar.setIconTextGap(10);
+        btnAnadir.setIconTextGap(10);
+        btnGuardar.setIconTextGap(10);
+        btnLimpiar.setIconTextGap(10);
+        btnEliminarItem.setIconTextGap(10);
+        btnActualizarCantidad.setIconTextGap(10);
+
+        btnBuscar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnAnadir.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnGuardar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnLimpiar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnEliminarItem.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnActualizarCantidad.setHorizontalTextPosition(SwingConstants.RIGHT);
+    }
+
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void actualizarTextos() {

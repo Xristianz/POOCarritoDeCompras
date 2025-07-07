@@ -1,7 +1,10 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.PreguntaSeguridad;
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +23,16 @@ public class UsuarioActualizar extends JInternalFrame {
     private JTextField txtRespuesta;
     private JButton btnGuardarRespuesta;
     private JButton btnActualizar;
+    private JLabel actualizarUsuarios;
+    private JLabel preguntasDeSeguridad;
+    private JLabel lblTelefono;
+    private JLabel lblCorreo;
+    private JLabel lblApellido;
+    private JLabel lblNombre;
+    private JLabel lblUsername;
+    private JLabel lblFechaDeNacimiento;
+    private JLabel lblContraseniaNueva;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
     private List<PreguntaSeguridad> preguntas;
     private int preguntaActualIndex;
@@ -29,6 +42,14 @@ public class UsuarioActualizar extends JInternalFrame {
 
     public UsuarioActualizar() {
         super("Actualizar Usuario", true, true, false, true);
+        mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(600, 500);
@@ -44,6 +65,50 @@ public class UsuarioActualizar extends JInternalFrame {
         preguntasRespondidas = 0;
 
         configurarEventos();
+        internacionalizar();
+        configurarIconos();
+    }
+    private void configurarIconos() {
+        Dimension iconSize = new Dimension(30, 30);
+        btnBuscar.setIcon(cargarIcono("/imagenes/reticulo.png", iconSize));
+        btnActualizar.setIcon(cargarIcono("/imagenes/nueva-cuenta.png", iconSize));
+        btnGuardarRespuesta.setIcon(cargarIcono("/imagenes/agregar.png", iconSize));
+
+        btnBuscar.setIconTextGap(10);
+        btnActualizar.setIconTextGap(10);
+        btnGuardarRespuesta.setIconTextGap(10);
+
+        btnBuscar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnActualizar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnGuardarRespuesta.setHorizontalTextPosition(SwingConstants.RIGHT);
+    }
+
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    public void internacionalizar() {
+        actualizarUsuarios.setText(mensajeHandler.get("actualizar.titulo"));
+        preguntasDeSeguridad.setText(mensajeHandler.get("actualizar.preguntas"));
+        btnBuscar.setText(mensajeHandler.get("actualizar.boton.buscar"));
+        btnActualizar.setText(mensajeHandler.get("actualizar.boton.actualizar"));
+        btnGuardarRespuesta.setText(mensajeHandler.get("actualizar.boton.guardar"));
+        lblUsername.setText(mensajeHandler.get("actualizar.username"));
+        lblNombre.setText(mensajeHandler.get("actualizar.nombre"));
+        lblApellido.setText(mensajeHandler.get("actualizar.apellido"));
+        lblCorreo.setText(mensajeHandler.get("actualizar.correo"));
+        lblTelefono.setText(mensajeHandler.get("actualizar.telefono"));
+        lblFechaDeNacimiento.setText(mensajeHandler.get("actualizar.fecha_nacimiento"));
+        lblContraseniaNueva.setText(mensajeHandler.get("actualizar.contrasenia_nueva"));
     }
 
     private void configurarEventos() {
@@ -91,12 +156,27 @@ public class UsuarioActualizar extends JInternalFrame {
         this.preguntas = preguntas;
         this.preguntaActualIndex = 0;
         this.preguntasRespondidas = 0;
+        this.respuestasGuardadas = new String[3];
+        this.idsPreguntasRespondidas = new int[3];
+
+        // Reiniciar estado de los componentes
+        txtRespuesta.setEnabled(true);
+        btnGuardarRespuesta.setEnabled(true);
+        txtRespuesta.setText("");
+
         mostrarSiguientePregunta();
     }
 
     private void mostrarSiguientePregunta() {
         if (preguntas == null || preguntas.isEmpty()) {
-            lblPreguntaActual.setText("No hay preguntas disponibles");
+            lblPreguntaActual.setText(mensajeHandler.get("actualizar.sin_preguntas"));
+            return;
+        }
+
+        if (preguntasRespondidas >= 3) {
+            lblPreguntaActual.setText(mensajeHandler.get("actualizar.preguntas_completas"));
+            btnGuardarRespuesta.setEnabled(false);
+            txtRespuesta.setEnabled(false);
             return;
         }
 
@@ -106,7 +186,7 @@ public class UsuarioActualizar extends JInternalFrame {
         } while (yaRespondida(preguntas.get(index).getId()));
 
         preguntaActualIndex = index;
-        lblPreguntaActual.setText(preguntas.get(preguntaActualIndex).getTexto());
+        lblPreguntaActual.setText(preguntas.get(preguntaActualIndex).getTexto(mensajeHandler));
     }
 
     private boolean yaRespondida(int preguntaId) {
@@ -174,5 +254,8 @@ public class UsuarioActualizar extends JInternalFrame {
 
         btnGuardarRespuesta.setEnabled(true);
         txtRespuesta.setEnabled(true);
+    }
+    public MensajeInternacionalizacionHandler getMensajeHandler() {
+        return mensajeHandler;
     }
 }

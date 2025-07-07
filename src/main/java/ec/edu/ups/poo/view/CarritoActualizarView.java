@@ -3,6 +3,8 @@ package ec.edu.ups.poo.view;
 import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.net.URL;
 
 public class CarritoActualizarView extends JInternalFrame {
     private JTextField txtCodigoCarrito;
@@ -36,15 +38,22 @@ public class CarritoActualizarView extends JInternalFrame {
     private JLabel lblTotal;
 
     public CarritoActualizarView() {
-        super("", true, true, false, true); // Título se establecerá en actualizarTextos()
+        super("", true, true, false, true);
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(800, 600);
 
-        // Configurar internacionalización
+
         this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
 
-        // Configurar modelo de tabla
+
         modeloTabla = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -58,20 +67,20 @@ public class CarritoActualizarView extends JInternalFrame {
         modeloTabla.addColumn("Subtotal");
         tblProductos.setModel(modeloTabla);
 
-        // Inicializar ComboBox de cantidades
+
         inicializarComboBoxCantidad();
 
-        // Configurar campos de solo lectura
+
         txtNombreProducto.setEditable(false);
         txtPrecioProducto.setEditable(false);
         txtSubtotal.setEditable(false);
         txtIva.setEditable(false);
         txtTotal.setEditable(false);
 
-        // Deshabilitar campos inicialmente
+
         setCamposHabilitados(false);
 
-        // Actualizar textos
+
         actualizarTextos();
     }
 
@@ -106,6 +115,48 @@ public class CarritoActualizarView extends JInternalFrame {
                 mensajeInternacionalizacion.get("carrito.columna.cantidad"),
                 mensajeInternacionalizacion.get("carrito.columna.subtotal")
         });
+        configurarIconos();
+    }
+    private void configurarIconos() {
+        Dimension iconSize = new Dimension(30, 30);
+
+        btnBuscarCarrito.setIcon(cargarIcono("/imagenes/buscar.png", iconSize));
+        btnBuscarProducto.setIcon(cargarIcono("/imagenes/reticulo.png", iconSize));
+        btnAgregarProducto.setIcon(cargarIcono("/imagenes/agregar.png", iconSize));
+        btnEliminarProducto.setIcon(cargarIcono("/imagenes/carro-vacio.png", iconSize));
+        btnActualizarCantidad.setIcon(cargarIcono("/imagenes/actualizar.png", iconSize));
+        btnGuardar.setIcon(cargarIcono("/imagenes/compras.png", iconSize));
+        btnCancelar.setIcon(cargarIcono("/imagenes/revolver.png", iconSize));
+
+        btnBuscarCarrito.setIconTextGap(10);
+        btnBuscarProducto.setIconTextGap(10);
+        btnAgregarProducto.setIconTextGap(10);
+        btnEliminarProducto.setIconTextGap(10);
+        btnActualizarCantidad.setIconTextGap(10);
+        btnGuardar.setIconTextGap(10);
+        btnCancelar.setIconTextGap(10);
+
+        btnBuscarCarrito.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnBuscarProducto.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnAgregarProducto.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnEliminarProducto.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnActualizarCantidad.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnGuardar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnCancelar.setHorizontalTextPosition(SwingConstants.RIGHT);
+    }
+
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void inicializarComboBoxCantidad() {

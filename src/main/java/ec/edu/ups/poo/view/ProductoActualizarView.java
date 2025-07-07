@@ -2,6 +2,8 @@ package ec.edu.ups.poo.view;
 
 import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 public class ProductoActualizarView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -17,6 +19,13 @@ public class ProductoActualizarView extends JInternalFrame {
 
     public ProductoActualizarView() {
         super("", true, true, false, true);
+        panelPrincipal.setBackground(Color.darkGray);
+        panelPrincipal.setForeground(Color.WHITE);
+        for (Component comp : panelPrincipal.getComponents()) {
+            if (comp instanceof JLabel) {
+                ((JLabel) comp).setForeground(Color.WHITE);
+            }
+        }
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 300);
@@ -26,6 +35,32 @@ public class ProductoActualizarView extends JInternalFrame {
 
         this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
         actualizarTextos();
+        configurarIconos();
+    }
+    private void configurarIconos() {
+        Dimension iconSize = new Dimension(30, 30);
+        btnBuscar.setIcon(cargarIcono("/imagenes/buscar.png", iconSize));
+        btnActualizar.setIcon(cargarIcono("/imagenes/agregar.png", iconSize));
+
+        btnBuscar.setIconTextGap(10);
+        btnActualizar.setIconTextGap(10);
+
+        btnBuscar.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnActualizar.setHorizontalTextPosition(SwingConstants.RIGHT);
+    }
+
+    private ImageIcon cargarIcono(String ruta, Dimension size) {
+        try {
+            URL imgURL = getClass().getResource(ruta);
+            if (imgURL != null) {
+                ImageIcon originalIcon = new ImageIcon(imgURL);
+                Image scaledImage = originalIcon.getImage().getScaledInstance(size.width, size.height, Image.SCALE_SMOOTH);
+                return new ImageIcon(scaledImage);
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void actualizarTextos() {

@@ -77,7 +77,10 @@ public class Main {
                                     productoAnadirView,
                                     productoListaView,
                                     productoActualizarView,
-                                    productoEliminarView);
+                                    productoEliminarView,
+                                    usuarioView,
+                                    usuarioAnadirView,
+                                    usuarioActualizarView);
                         }
                     }
                 });
@@ -260,8 +263,8 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 int confirmacion = JOptionPane.showConfirmDialog(
                         principalView,
-                        "¿Está seguro que desea cerrar sesión?",
-                        "Confirmar cierre de sesión",
+                        principalView.getMensajeInternacionalizacionHandler().get("mensaje.confirmar_cierre_sesion"),
+                        principalView.getMensajeInternacionalizacionHandler().get("titulo.confirmar_cierre_sesion"),
                         JOptionPane.YES_NO_OPTION
                 );
 
@@ -278,8 +281,8 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 int confirmacion = JOptionPane.showConfirmDialog(
                         principalView,
-                        "¿Está seguro que desea salir del sistema?",
-                        "Confirmar salida",
+                        principalView.getMensajeInternacionalizacionHandler().get("mensaje.confirmar_salida"),
+                        principalView.getMensajeInternacionalizacionHandler().get("titulo.confirmar_salida"),
                         JOptionPane.YES_NO_OPTION
                 );
 
@@ -299,27 +302,36 @@ public class Main {
                                                 ProductoAnadirView productoAnadirView,
                                                 ProductoListaView productoListaView,
                                                 ProductoActualizarView productoActualizarView,
-                                                ProductoEliminarView productoEliminarView) {
+                                                ProductoEliminarView productoEliminarView,
+                                                UsuarioView usuarioView,
+                                                UsuarioAnadir usuarioAnadirView,
+                                                UsuarioActualizar usuarioActualizarView) {
 
         principalView.getMenuItemIdiomaEspanol().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 principalView.cambiarIdioma("es", "EC");
 
-                // Carrito
+
+
                 carritoAnadirView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
                 carritoListaView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
                 carritoActualizarView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
                 carritoEliminarView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
                 detalleCarritoView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
 
-                // Producto
+                // Producto (mantener existente)
                 productoAnadirView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
                 productoListaView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
                 productoActualizarView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
                 productoEliminarView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
 
-                // Actualizar textos
+                // Usuario (nuevo)
+                usuarioView.getMensajeHandler().setLenguaje("es", "EC");
+                usuarioAnadirView.getMensajeHandler().setLenguaje("es", "EC");
+                usuarioActualizarView.getMensajeHandler().setLenguaje("es", "EC");
+
+                // Actualizar textos (mantener existente + añadir Usuario)
                 carritoAnadirView.actualizarTextos();
                 carritoListaView.actualizarTextos();
                 carritoActualizarView.actualizarTextos();
@@ -329,6 +341,9 @@ public class Main {
                 productoListaView.actualizarTextos();
                 productoActualizarView.actualizarTextos();
                 productoEliminarView.actualizarTextos();
+                usuarioView.internacionalizar();
+                usuarioAnadirView.internacionalizar();
+                usuarioActualizarView.internacionalizar();
             }
         });
 
@@ -337,20 +352,26 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 principalView.cambiarIdioma("en", "US");
 
-                // Carrito
+
+                // Carrito (mantener existente)
                 carritoAnadirView.getMensajeInternacionalizacion().setLenguaje("en", "US");
                 carritoListaView.getMensajeInternacionalizacion().setLenguaje("en", "US");
                 carritoActualizarView.getMensajeInternacionalizacion().setLenguaje("en", "US");
                 carritoEliminarView.getMensajeInternacionalizacion().setLenguaje("en", "US");
                 detalleCarritoView.getMensajeInternacionalizacion().setLenguaje("en", "US");
 
-                // Producto
+                // Producto (mantener existente)
                 productoAnadirView.getMensajeInternacionalizacion().setLenguaje("en", "US");
                 productoListaView.getMensajeInternacionalizacion().setLenguaje("en", "US");
                 productoActualizarView.getMensajeInternacionalizacion().setLenguaje("en", "US");
                 productoEliminarView.getMensajeInternacionalizacion().setLenguaje("en", "US");
 
-                // Actualizar textos
+                // Usuario (nuevo)
+                usuarioView.getMensajeHandler().setLenguaje("en", "US");
+                usuarioAnadirView.getMensajeHandler().setLenguaje("en", "US");
+                usuarioActualizarView.getMensajeHandler().setLenguaje("en", "US");
+
+                // Actualizar textos (mantener existente + añadir Usuario)
                 carritoAnadirView.actualizarTextos();
                 carritoListaView.actualizarTextos();
                 carritoActualizarView.actualizarTextos();
@@ -360,6 +381,9 @@ public class Main {
                 productoListaView.actualizarTextos();
                 productoActualizarView.actualizarTextos();
                 productoEliminarView.actualizarTextos();
+                usuarioView.internacionalizar();
+                usuarioAnadirView.internacionalizar();
+                usuarioActualizarView.internacionalizar();
             }
         });
 
@@ -368,20 +392,26 @@ public class Main {
             public void actionPerformed(ActionEvent e) {
                 principalView.cambiarIdioma("fr", "FR");
 
-                // Carrito
+
+                // Carrito (mantener existente)
                 carritoAnadirView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
                 carritoListaView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
                 carritoActualizarView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
                 carritoEliminarView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
                 detalleCarritoView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
 
-                // Producto
+                // Producto (mantener existente)
                 productoAnadirView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
                 productoListaView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
                 productoActualizarView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
                 productoEliminarView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
 
-                // Actualizar textos
+                // Usuario (nuevo)
+                usuarioView.getMensajeHandler().setLenguaje("fr", "FR");
+                usuarioAnadirView.getMensajeHandler().setLenguaje("fr", "FR");
+                usuarioActualizarView.getMensajeHandler().setLenguaje("fr", "FR");
+
+                // Actualizar textos (mantener existente + añadir Usuario)
                 carritoAnadirView.actualizarTextos();
                 carritoListaView.actualizarTextos();
                 carritoActualizarView.actualizarTextos();
@@ -391,6 +421,9 @@ public class Main {
                 productoListaView.actualizarTextos();
                 productoActualizarView.actualizarTextos();
                 productoEliminarView.actualizarTextos();
+                usuarioView.internacionalizar();
+                usuarioAnadirView.internacionalizar();
+                usuarioActualizarView.internacionalizar();
             }
         });
     }

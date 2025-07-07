@@ -1,15 +1,17 @@
 package ec.edu.ups.poo.models;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
+
 public class PreguntaSeguridad {
     private int id;
-    private String texto;
+    private String textoKey;
 
     public PreguntaSeguridad() {
     }
 
-    public PreguntaSeguridad(int id, String texto) {
+    public PreguntaSeguridad(int id, String textoKey) {
         this.id = id;
-        this.texto = texto;
+        this.textoKey = textoKey;
     }
 
     public int getId() {
@@ -20,16 +22,21 @@ public class PreguntaSeguridad {
         this.id = id;
     }
 
-    public String getTexto() {
-        return texto;
+    public String getTextoKey() {
+        return textoKey;
     }
 
-    public void setTexto(String texto) {
-        this.texto = texto;
+    public void setTextoKey(String textoKey) {
+        this.textoKey = textoKey;
+    }
+
+    // Método para obtener el texto traducido
+    public String getTexto(MensajeInternacionalizacionHandler handler) {
+        return handler.get(textoKey);
     }
 
     @Override
     public String toString() {
-        return texto;
+        return textoKey;
     }
 }
