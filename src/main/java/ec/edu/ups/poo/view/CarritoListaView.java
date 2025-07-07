@@ -1,7 +1,7 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.Carrito;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
@@ -15,12 +15,19 @@ public class CarritoListaView extends JInternalFrame {
     private JButton btnListar;
     private JButton btnVerDetalles;
     private DefaultTableModel modelo;
+    private MensajeInternacionalizacionHandler mensajeInternacionalizacion;
+
+    // Labels
+    private JLabel lblBuscar;
 
     public CarritoListaView() {
-        super("Listado de Carritos", true, true, true, true);
+        super("", true, true, true, true); // Título se establecerá en actualizarTextos()
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(600, 400);
+
+        // Configurar internacionalización
+        this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
 
         modelo = new DefaultTableModel() {
             @Override
@@ -30,6 +37,30 @@ public class CarritoListaView extends JInternalFrame {
         };
         modelo.setColumnIdentifiers(new Object[]{"Código", "Usuario", "Fecha", "Total"});
         tblCarritos.setModel(modelo);
+
+        // Actualizar textos
+        actualizarTextos();
+    }
+
+    public void actualizarTextos() {
+        // Título
+        setTitle(mensajeInternacionalizacion.get("titulo.lista_carritos"));
+
+        // Labels
+        lblBuscar.setText(mensajeInternacionalizacion.get("carrito.buscar_por_codigo"));
+
+        // Botones
+        btnBuscar.setText(mensajeInternacionalizacion.get("carrito.buscar"));
+        btnListar.setText(mensajeInternacionalizacion.get("carrito.listar_todos"));
+        btnVerDetalles.setText(mensajeInternacionalizacion.get("carrito.ver_detalles"));
+
+        // Encabezados de tabla
+        modelo.setColumnIdentifiers(new Object[]{
+                mensajeInternacionalizacion.get("carrito.columna.codigo"),
+                mensajeInternacionalizacion.get("carrito.columna.usuario"),
+                mensajeInternacionalizacion.get("carrito.columna.fecha"),
+                mensajeInternacionalizacion.get("carrito.columna.total")
+        });
     }
 
     public void cargarDatos(List<Carrito> listaCarritos) {
@@ -45,8 +76,11 @@ public class CarritoListaView extends JInternalFrame {
             });
         }
     }
+    public MensajeInternacionalizacionHandler getMensajeInternacionalizacion() {
+        return mensajeInternacionalizacion;
+    }
 
-    // Getters para los componentes
+    // Getters (mantener los mismos)
     public JButton getBtnBuscar() { return btnBuscar; }
     public JButton getBtnListar() { return btnListar; }
     public JButton getBtnVerDetalles() { return btnVerDetalles; }
@@ -58,5 +92,3 @@ public class CarritoListaView extends JInternalFrame {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 }
-
-

@@ -1,7 +1,6 @@
 package ec.edu.ups.poo.view;
 
-import javax.swing.*;
-
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -23,20 +22,33 @@ public class CarritoActualizarView extends JInternalFrame {
     private JButton btnCancelar;
     private JPanel panelPrincipal;
     private JButton btnBuscarProducto;
-
     private DefaultTableModel modeloTabla;
+    private MensajeInternacionalizacionHandler mensajeInternacionalizacion;
+
+    // Labels
+    private JLabel lblCodigoCarrito;
+    private JLabel lblCodigoProducto;
+    private JLabel lblNombreProducto;
+    private JLabel lblPrecioProducto;
+    private JLabel lblCantidad;
+    private JLabel lblSubtotal;
+    private JLabel lblIva;
+    private JLabel lblTotal;
 
     public CarritoActualizarView() {
-        super("Actualizar Carrito", true, true, false, true);
+        super("", true, true, false, true); // Título se establecerá en actualizarTextos()
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(800, 600);
+
+        // Configurar internacionalización
+        this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
 
         // Configurar modelo de tabla
         modeloTabla = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Hacer que la tabla no sea editable directamente
+                return false;
             }
         };
         modeloTabla.addColumn("Código");
@@ -58,6 +70,42 @@ public class CarritoActualizarView extends JInternalFrame {
 
         // Deshabilitar campos inicialmente
         setCamposHabilitados(false);
+
+        // Actualizar textos
+        actualizarTextos();
+    }
+
+    public void actualizarTextos() {
+        // Título
+        setTitle(mensajeInternacionalizacion.get("titulo.actualizar_carrito"));
+
+        // Labels
+        lblCodigoCarrito.setText(mensajeInternacionalizacion.get("carrito.codigo_carrito"));
+        lblCodigoProducto.setText(mensajeInternacionalizacion.get("carrito.codigo_producto"));
+        lblNombreProducto.setText(mensajeInternacionalizacion.get("carrito.nombre"));
+        lblPrecioProducto.setText(mensajeInternacionalizacion.get("carrito.precio"));
+        lblCantidad.setText(mensajeInternacionalizacion.get("carrito.cantidad"));
+        lblSubtotal.setText(mensajeInternacionalizacion.get("carrito.subtotal"));
+        lblIva.setText(mensajeInternacionalizacion.get("carrito.iva"));
+        lblTotal.setText(mensajeInternacionalizacion.get("carrito.total"));
+
+        // Botones
+        btnBuscarCarrito.setText(mensajeInternacionalizacion.get("carrito.buscar"));
+        btnBuscarProducto.setText(mensajeInternacionalizacion.get("carrito.buscar"));
+        btnAgregarProducto.setText(mensajeInternacionalizacion.get("carrito.agregar"));
+        btnEliminarProducto.setText(mensajeInternacionalizacion.get("carrito.eliminar"));
+        btnActualizarCantidad.setText(mensajeInternacionalizacion.get("carrito.actualizar_cantidad"));
+        btnGuardar.setText(mensajeInternacionalizacion.get("carrito.guardar"));
+        btnCancelar.setText(mensajeInternacionalizacion.get("carrito.cancelar"));
+
+        // Encabezados de tabla
+        modeloTabla.setColumnIdentifiers(new Object[]{
+                mensajeInternacionalizacion.get("carrito.columna.codigo"),
+                mensajeInternacionalizacion.get("carrito.columna.nombre"),
+                mensajeInternacionalizacion.get("carrito.columna.precio"),
+                mensajeInternacionalizacion.get("carrito.columna.cantidad"),
+                mensajeInternacionalizacion.get("carrito.columna.subtotal")
+        });
     }
 
     private void inicializarComboBoxCantidad() {
@@ -82,7 +130,7 @@ public class CarritoActualizarView extends JInternalFrame {
         btnCancelar.setEnabled(habilitado);
     }
 
-    // Getters para todos los componentes
+    // Getters (mantener los mismos)
     public JButton getBtnBuscarCarrito() { return btnBuscarCarrito; }
     public JButton getBtnAgregarProducto() { return btnAgregarProducto; }
     public JButton getBtnEliminarProducto() { return btnEliminarProducto; }
@@ -138,5 +186,8 @@ public class CarritoActualizarView extends JInternalFrame {
     public void mostrarDatosProducto(String nombre, double precio) {
         txtNombreProducto.setText(nombre);
         txtPrecioProducto.setText(String.format("%.2f", precio));
+    }
+    public MensajeInternacionalizacionHandler getMensajeInternacionalizacion() {
+        return mensajeInternacionalizacion;
     }
 }

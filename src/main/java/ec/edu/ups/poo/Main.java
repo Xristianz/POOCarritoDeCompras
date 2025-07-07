@@ -45,6 +45,7 @@ public class Main {
                             UsuarioView usuarioView = new UsuarioView();
                             UsuarioAnadir usuarioAnadirView = new UsuarioAnadir();
                             UsuarioActualizar usuarioActualizarView = new UsuarioActualizar();
+                            DetalleCarritoView detalleCarritoView = new DetalleCarritoView();
 
                             // Instanciar controladores
                             ProductoController productoController = new ProductoController(
@@ -67,7 +68,16 @@ public class Main {
                                     carritoActualizarView, carritoEliminarView, loginView, usuarioController);
 
                             // Configurar eventos de idioma
-                            configurarEventosIdioma(principalView);
+                            configurarEventosIdioma(principalView,
+                                    carritoAnadirView,
+                                    carritoListaView,
+                                    carritoActualizarView,
+                                    carritoEliminarView,
+                                    detalleCarritoView,
+                                    productoAnadirView,
+                                    productoListaView,
+                                    productoActualizarView,
+                                    productoEliminarView);
                         }
                     }
                 });
@@ -280,11 +290,45 @@ public class Main {
         });
     }
 
-    private static void configurarEventosIdioma(MenuPrincipalView principalView) {
+    private static void configurarEventosIdioma(MenuPrincipalView principalView,
+                                                CarritoAnadirView carritoAnadirView,
+                                                CarritoListaView carritoListaView,
+                                                CarritoActualizarView carritoActualizarView,
+                                                CarritoEliminarView carritoEliminarView,
+                                                DetalleCarritoView detalleCarritoView,
+                                                ProductoAnadirView productoAnadirView,
+                                                ProductoListaView productoListaView,
+                                                ProductoActualizarView productoActualizarView,
+                                                ProductoEliminarView productoEliminarView) {
+
         principalView.getMenuItemIdiomaEspanol().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 principalView.cambiarIdioma("es", "EC");
+
+                // Carrito
+                carritoAnadirView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+                carritoListaView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+                carritoActualizarView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+                carritoEliminarView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+                detalleCarritoView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+
+                // Producto
+                productoAnadirView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+                productoListaView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+                productoActualizarView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+                productoEliminarView.getMensajeInternacionalizacion().setLenguaje("es", "EC");
+
+                // Actualizar textos
+                carritoAnadirView.actualizarTextos();
+                carritoListaView.actualizarTextos();
+                carritoActualizarView.actualizarTextos();
+                carritoEliminarView.actualizarTextos();
+                detalleCarritoView.actualizarTextos();
+                productoAnadirView.actualizarTextos();
+                productoListaView.actualizarTextos();
+                productoActualizarView.actualizarTextos();
+                productoEliminarView.actualizarTextos();
             }
         });
 
@@ -292,6 +336,30 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 principalView.cambiarIdioma("en", "US");
+
+                // Carrito
+                carritoAnadirView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+                carritoListaView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+                carritoActualizarView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+                carritoEliminarView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+                detalleCarritoView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+
+                // Producto
+                productoAnadirView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+                productoListaView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+                productoActualizarView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+                productoEliminarView.getMensajeInternacionalizacion().setLenguaje("en", "US");
+
+                // Actualizar textos
+                carritoAnadirView.actualizarTextos();
+                carritoListaView.actualizarTextos();
+                carritoActualizarView.actualizarTextos();
+                carritoEliminarView.actualizarTextos();
+                detalleCarritoView.actualizarTextos();
+                productoAnadirView.actualizarTextos();
+                productoListaView.actualizarTextos();
+                productoActualizarView.actualizarTextos();
+                productoEliminarView.actualizarTextos();
             }
         });
 
@@ -299,6 +367,30 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 principalView.cambiarIdioma("fr", "FR");
+
+                // Carrito
+                carritoAnadirView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+                carritoListaView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+                carritoActualizarView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+                carritoEliminarView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+                detalleCarritoView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+
+                // Producto
+                productoAnadirView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+                productoListaView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+                productoActualizarView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+                productoEliminarView.getMensajeInternacionalizacion().setLenguaje("fr", "FR");
+
+                // Actualizar textos
+                carritoAnadirView.actualizarTextos();
+                carritoListaView.actualizarTextos();
+                carritoActualizarView.actualizarTextos();
+                carritoEliminarView.actualizarTextos();
+                detalleCarritoView.actualizarTextos();
+                productoAnadirView.actualizarTextos();
+                productoListaView.actualizarTextos();
+                productoActualizarView.actualizarTextos();
+                productoEliminarView.actualizarTextos();
             }
         });
     }

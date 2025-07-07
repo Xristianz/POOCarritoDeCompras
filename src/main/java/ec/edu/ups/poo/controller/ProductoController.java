@@ -3,10 +3,12 @@ package ec.edu.ups.poo.controller;
 import ec.edu.ups.poo.DAO.ProductoDAO;
 import ec.edu.ups.poo.models.Producto;
 import ec.edu.ups.poo.view.*;
+import ec.edu.ups.poo.controller.util.FormateadorUtils;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Locale;
 
 public class ProductoController {
     private final ProductoAnadirView productoAnadirView;
@@ -94,7 +96,9 @@ public class ProductoController {
             if (productoAnadirView.getTxtCodigo().getText().isEmpty() ||
                     productoAnadirView.getTxtNombre().getText().isEmpty() ||
                     productoAnadirView.getTxtPrecio().getText().isEmpty()) {
-                productoAnadirView.mostrarMensaje("Todos los campos son requeridos");
+                productoAnadirView.mostrarMensaje(
+                        productoAnadirView.getMensajeInternacionalizacion().get("mensaje.campos_requeridos")
+                );
                 return;
             }
 
@@ -103,21 +107,29 @@ public class ProductoController {
             double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
 
             if (productoDAO.buscarPorCodigo(codigo) != null) {
-                productoAnadirView.mostrarMensaje("Ya existe un producto con este código");
+                productoAnadirView.mostrarMensaje(
+                        productoAnadirView.getMensajeInternacionalizacion().get("mensaje.producto_existente")
+                );
                 return;
             }
 
             if (precio <= 0) {
-                productoAnadirView.mostrarMensaje("El precio debe ser mayor a cero");
+                productoAnadirView.mostrarMensaje(
+                        productoAnadirView.getMensajeInternacionalizacion().get("mensaje.precio_invalido")
+                );
                 return;
             }
 
             productoDAO.crear(new Producto(codigo, nombre, precio));
-            productoAnadirView.mostrarMensaje("Producto guardado correctamente");
+            productoAnadirView.mostrarMensaje(
+                    productoAnadirView.getMensajeInternacionalizacion().get("mensaje.producto_guardado")
+            );
             productoAnadirView.limpiarCampos();
-            productoAnadirView.mostrarProductos(productoDAO.listarTodos());
+            listarProductos();
         } catch (NumberFormatException e) {
-            productoAnadirView.mostrarMensaje("El código y precio deben ser números válidos");
+            productoAnadirView.mostrarMensaje(
+                    productoAnadirView.getMensajeInternacionalizacion().get("mensaje.valores_numericos")
+            );
         }
     }
 
@@ -133,15 +145,26 @@ public class ProductoController {
     }
 
     private void buscarProductoPorCodigo() {
-        int codigo = Integer.parseInt(carritoAnadirView.getTxtCodigo().getText());
-        Producto producto = productoDAO.buscarPorCodigo(codigo);
-        if (producto == null) {
-            carritoAnadirView.mostrarMensaje("No se encontro el producto");
-            carritoAnadirView.getTxtNombre().setText("");
-            carritoAnadirView.getTxtPrecio().setText("");
-        } else {
-            carritoAnadirView.getTxtNombre().setText(producto.getNombre());
-            carritoAnadirView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+        try {
+            int codigo = Integer.parseInt(carritoAnadirView.getTxtCodigo().getText());
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto == null) {
+                carritoAnadirView.mostrarMensaje(
+                        carritoAnadirView.getMensajeInternacionalizacion().get("mensaje.producto_no_encontrado")
+                );
+                carritoAnadirView.getTxtNombre().setText("");
+                carritoAnadirView.getTxtPrecio().setText("");
+            } else {
+                Locale locale = carritoAnadirView.getMensajeInternacionalizacion().getLocale();
+                carritoAnadirView.getTxtNombre().setText(producto.getNombre());
+                carritoAnadirView.getTxtPrecio().setText(
+                        FormateadorUtils.formatearMoneda(producto.getPrecio(), locale)
+                );
+            }
+        } catch (NumberFormatException e) {
+            carritoAnadirView.mostrarMensaje(
+                    carritoAnadirView.getMensajeInternacionalizacion().get("mensaje.codigo_invalido")
+            );
         }
     }
 
@@ -179,12 +202,16 @@ public class ProductoController {
         String codigoTexto = productoActualizarView.getTxtCodigo().getText().trim();
 
         if (codigoTexto.isEmpty()) {
-            productoActualizarView.mostrarMensaje("Debe ingresar un código");
+            productoActualizarView.mostrarMensaje(
+                    productoActualizarView.getMensajeInternacionalizacion().get("mensaje.codigo_requerido")
+            );
             return;
         }
 
         if (!esNumero(codigoTexto)) {
-            productoActualizarView.mostrarMensaje("El código debe ser un número entero");
+            productoActualizarView.mostrarMensaje(
+                    productoActualizarView.getMensajeInternacionalizacion().get("mensaje.codigo_entero")
+            );
             return;
         }
 
@@ -192,7 +219,9 @@ public class ProductoController {
         Producto producto = productoDAO.buscarPorCodigo(codigo);
 
         if (producto == null) {
-            productoActualizarView.mostrarMensaje("No existe un producto con ese código");
+            productoActualizarView.mostrarMensaje(
+                    productoActualizarView.getMensajeInternacionalizacion().get("mensaje.producto_no_existe")
+            );
             productoActualizarView.getTxtNombre().setText("");
             productoActualizarView.getTxtPrecio().setText("");
         } else {
@@ -207,17 +236,23 @@ public class ProductoController {
         String precioTexto = productoActualizarView.getTxtPrecio().getText().trim();
 
         if (codigoTexto.isEmpty() || nombre.isEmpty() || precioTexto.isEmpty()) {
-            productoActualizarView.mostrarMensaje("Todos los campos son obligatorios");
+            productoActualizarView.mostrarMensaje(
+                    productoActualizarView.getMensajeInternacionalizacion().get("mensaje.campos_requeridos")
+            );
             return;
         }
 
         if (!esNumero(codigoTexto)) {
-            productoActualizarView.mostrarMensaje("El código debe ser un número entero");
+            productoActualizarView.mostrarMensaje(
+                    productoActualizarView.getMensajeInternacionalizacion().get("mensaje.codigo_entero")
+            );
             return;
         }
 
         if (!esNumeroDecimal(precioTexto)) {
-            productoActualizarView.mostrarMensaje("El precio debe ser un número válido (ej: 10.50)");
+            productoActualizarView.mostrarMensaje(
+                    productoActualizarView.getMensajeInternacionalizacion().get("mensaje.precio_invalido")
+            );
             return;
         }
 
@@ -225,23 +260,29 @@ public class ProductoController {
         double precio = Double.parseDouble(precioTexto);
 
         if (precio <= 0) {
-            productoActualizarView.mostrarMensaje("El precio debe ser mayor a cero");
+            productoActualizarView.mostrarMensaje(
+                    productoActualizarView.getMensajeInternacionalizacion().get("mensaje.precio_mayor_cero")
+            );
             return;
         }
 
         if (productoDAO.buscarPorCodigo(codigo) == null) {
-            productoActualizarView.mostrarMensaje("No existe un producto con ese código");
+            productoActualizarView.mostrarMensaje(
+                    productoActualizarView.getMensajeInternacionalizacion().get("mensaje.producto_no_existe")
+            );
             return;
         }
 
         Producto productoActualizado = new Producto(codigo, nombre, precio);
         productoDAO.actualizar(productoActualizado);
 
-        productoActualizarView.mostrarMensaje("Producto actualizado correctamente");
+        productoActualizarView.mostrarMensaje(
+                productoActualizarView.getMensajeInternacionalizacion().get("mensaje.producto_actualizado")
+        );
         productoActualizarView.limpiarCampos();
 
         if (productoListaView.isVisible()) {
-            productoListaView.cargarDatos(productoDAO.listarTodos());
+            listarProductos();
         }
     }
 
@@ -249,12 +290,16 @@ public class ProductoController {
         String codigoTexto = productoEliminarView.getTxtCodigo().getText().trim();
 
         if (codigoTexto.isEmpty()) {
-            productoEliminarView.mostrarMensaje("Debe ingresar un código");
+            productoEliminarView.mostrarMensaje(
+                    productoEliminarView.getMensajeInternacionalizacion().get("mensaje.codigo_requerido")
+            );
             return;
         }
 
         if (!esNumero(codigoTexto)) {
-            productoEliminarView.mostrarMensaje("El código debe ser un número entero");
+            productoEliminarView.mostrarMensaje(
+                    productoEliminarView.getMensajeInternacionalizacion().get("mensaje.codigo_entero")
+            );
             return;
         }
 
@@ -262,7 +307,9 @@ public class ProductoController {
         Producto producto = productoDAO.buscarPorCodigo(codigo);
 
         if (producto == null) {
-            productoEliminarView.mostrarMensaje("No existe un producto con ese código");
+            productoEliminarView.mostrarMensaje(
+                    productoEliminarView.getMensajeInternacionalizacion().get("mensaje.producto_no_existe")
+            );
             productoEliminarView.getTxtNombre().setText("");
             productoEliminarView.getTxtPrecio().setText("");
         } else {
@@ -275,19 +322,25 @@ public class ProductoController {
         String codigoTexto = productoEliminarView.getTxtCodigo().getText().trim();
 
         if (codigoTexto.isEmpty()) {
-            productoEliminarView.mostrarMensaje("Debe ingresar un código");
+            productoEliminarView.mostrarMensaje(
+                    productoEliminarView.getMensajeInternacionalizacion().get("mensaje.codigo_requerido")
+            );
             return;
         }
 
         if (!esNumero(codigoTexto)) {
-            productoEliminarView.mostrarMensaje("El código debe ser un número entero");
+            productoEliminarView.mostrarMensaje(
+                    productoEliminarView.getMensajeInternacionalizacion().get("mensaje.codigo_entero")
+            );
             return;
         }
 
         int codigo = Integer.parseInt(codigoTexto);
 
         if (productoDAO.buscarPorCodigo(codigo) == null) {
-            productoEliminarView.mostrarMensaje("No existe un producto con ese código");
+            productoEliminarView.mostrarMensaje(
+                    productoEliminarView.getMensajeInternacionalizacion().get("mensaje.producto_no_existe")
+            );
             return;
         }
 
@@ -296,11 +349,13 @@ public class ProductoController {
         }
 
         productoDAO.eliminar(codigo);
-        productoEliminarView.mostrarMensaje("Producto eliminado correctamente");
+        productoEliminarView.mostrarMensaje(
+                productoEliminarView.getMensajeInternacionalizacion().get("mensaje.producto_eliminado")
+        );
         productoEliminarView.limpiarCampos();
 
         if (productoListaView.isVisible()) {
-            productoListaView.cargarDatos(productoDAO.listarTodos());
+            listarProductos();
         }
     }
 }

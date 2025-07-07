@@ -1,8 +1,8 @@
 package ec.edu.ups.poo.view;
 
+import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.poo.models.Carrito;
 import ec.edu.ups.poo.models.ItemCarrito;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -10,11 +10,15 @@ public class DetalleCarritoView extends JInternalFrame {
     private JTable tblDetalles;
     private JPanel panelPrincipal;
     private DefaultTableModel modelo;
+    private MensajeInternacionalizacionHandler mensajeInternacionalizacion;
 
     public DetalleCarritoView() {
-        super("Detalles del Carrito", true, true, true, true);
+        super("", true, true, true, true); // Título se establecerá en actualizarTextos()
         setContentPane(panelPrincipal);
         setSize(600, 400);
+
+        // Configurar internacionalización
+        this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
 
         modelo = new DefaultTableModel() {
             @Override
@@ -24,6 +28,24 @@ public class DetalleCarritoView extends JInternalFrame {
         };
         modelo.setColumnIdentifiers(new Object[]{"Código", "Producto", "Precio", "Cantidad", "Subtotal", "Total con IVA"});
         tblDetalles.setModel(modelo);
+
+        // Actualizar textos
+        actualizarTextos();
+    }
+
+    public void actualizarTextos() {
+        // Título
+        setTitle(mensajeInternacionalizacion.get("titulo.detalle_carrito"));
+
+        // Encabezados de tabla
+        modelo.setColumnIdentifiers(new Object[]{
+                mensajeInternacionalizacion.get("carrito.columna.codigo"),
+                mensajeInternacionalizacion.get("carrito.columna.producto"),
+                mensajeInternacionalizacion.get("carrito.columna.precio"),
+                mensajeInternacionalizacion.get("carrito.columna.cantidad"),
+                mensajeInternacionalizacion.get("carrito.columna.subtotal"),
+                mensajeInternacionalizacion.get("carrito.columna.total_iva")
+        });
     }
 
     public void cargarDetalles(Carrito carrito) {
@@ -56,5 +78,7 @@ public class DetalleCarritoView extends JInternalFrame {
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
-
+    public MensajeInternacionalizacionHandler getMensajeInternacionalizacion() {
+        return mensajeInternacionalizacion;
+    }
 }

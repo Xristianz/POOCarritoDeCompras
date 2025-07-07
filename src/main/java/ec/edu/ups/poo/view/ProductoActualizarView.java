@@ -1,27 +1,44 @@
 package ec.edu.ups.poo.view;
 
-import javax.swing.*;
 import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
+import javax.swing.*;
 
 public class ProductoActualizarView extends JInternalFrame {
-    // Componentes del GUI Designer
     private JPanel panelPrincipal;
     private JTextField txtCodigo;
     private JButton btnBuscar;
     private JTextField txtNombre;
     private JTextField txtPrecio;
     private JButton btnActualizar;
+    private JLabel lblCodigo;
+    private JLabel lblNombre;
+    private JLabel lblPrecio;
+    private MensajeInternacionalizacionHandler mensajeInternacionalizacion;
 
     public ProductoActualizarView() {
+        super("", true, true, false, true);
         setContentPane(panelPrincipal);
-        setTitle("MODIFICACIÓN DE PRODUCTOS");
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 200);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setSize(500, 300);
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        //setLocationRelativeTo(null);
 
+        this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
+        actualizarTextos();
+    }
+
+    public void actualizarTextos() {
+        this.setTitle(mensajeInternacionalizacion.get("titulo.producto"));
+        lblCodigo.setText(mensajeInternacionalizacion.get("producto.codigo"));
+        lblNombre.setText(mensajeInternacionalizacion.get("producto.nombre"));
+        lblPrecio.setText(mensajeInternacionalizacion.get("producto.precio"));
+        btnBuscar.setText(mensajeInternacionalizacion.get("producto.buscar"));
+        btnActualizar.setText(mensajeInternacionalizacion.get("producto.actualizar"));
+    }
+
+    public MensajeInternacionalizacionHandler getMensajeInternacionalizacion() {
+        return mensajeInternacionalizacion;
     }
 
     public JTextField getTxtCodigo() {
@@ -51,11 +68,10 @@ public class ProductoActualizarView extends JInternalFrame {
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
+
     public void limpiarCampos() {
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
-        txtCodigo.requestFocus(); // Opcional: coloca el foco en el campo código
     }
-
 }
