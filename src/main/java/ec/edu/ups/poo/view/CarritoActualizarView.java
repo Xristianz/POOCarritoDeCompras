@@ -1,11 +1,20 @@
 package ec.edu.ups.poo.view;
 
 import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
+import ec.edu.ups.poo.controller.util.FormateadorUtils;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.net.URL;
+import java.util.Locale;
 
+/**
+ * Vista (JInternalFrame) para la actualización de un carrito de compras existente.
+ * <p>
+ * Permite buscar un carrito por código y, una vez cargado, modificar sus ítems
+ * (agregar, eliminar, actualizar cantidad) y guardar los cambios.
+ * </p>
+ */
 public class CarritoActualizarView extends JInternalFrame {
     private JTextField txtCodigoCarrito;
     private JButton btnBuscarCarrito;
@@ -27,7 +36,6 @@ public class CarritoActualizarView extends JInternalFrame {
     private DefaultTableModel modeloTabla;
     private MensajeInternacionalizacionHandler mensajeInternacionalizacion;
 
-    // Labels
     private JLabel lblCodigoCarrito;
     private JLabel lblCodigoProducto;
     private JLabel lblNombreProducto;
@@ -37,6 +45,10 @@ public class CarritoActualizarView extends JInternalFrame {
     private JLabel lblIva;
     private JLabel lblTotal;
 
+    /**
+     * Construye la ventana de actualización de carritos.
+     * Inicializa los componentes, el modelo de la tabla y los textos internacionalizados.
+     */
     public CarritoActualizarView() {
         super("", true, true, false, true);
         panelPrincipal.setBackground(Color.darkGray);
@@ -50,9 +62,16 @@ public class CarritoActualizarView extends JInternalFrame {
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(800, 600);
 
+        if (txtCodigoCarrito == null) txtCodigoCarrito = new JTextField();
+        if (txtCodigoProducto == null) txtCodigoProducto = new JTextField();
+        if (txtNombreProducto == null) txtNombreProducto = new JTextField();
+        if (txtPrecioProducto == null) txtPrecioProducto = new JTextField();
+        if (txtSubtotal == null) txtSubtotal = new JTextField();
+        if (txtIva == null) txtIva = new JTextField();
+        if (txtTotal == null) txtTotal = new JTextField();
+        if (tblProductos == null) tblProductos = new JTable();
 
         this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
-
 
         modeloTabla = new DefaultTableModel() {
             @Override
@@ -60,16 +79,8 @@ public class CarritoActualizarView extends JInternalFrame {
                 return false;
             }
         };
-        modeloTabla.addColumn("Código");
-        modeloTabla.addColumn("Nombre");
-        modeloTabla.addColumn("Precio");
-        modeloTabla.addColumn("Cantidad");
-        modeloTabla.addColumn("Subtotal");
         tblProductos.setModel(modeloTabla);
-
-
         inicializarComboBoxCantidad();
-
 
         txtNombreProducto.setEditable(false);
         txtPrecioProducto.setEditable(false);
@@ -77,18 +88,16 @@ public class CarritoActualizarView extends JInternalFrame {
         txtIva.setEditable(false);
         txtTotal.setEditable(false);
 
-
         setCamposHabilitados(false);
-
-
         actualizarTextos();
     }
 
+    /**
+     * Actualiza todos los textos de la interfaz gráfica al idioma actual.
+     */
     public void actualizarTextos() {
-        // Título
         setTitle(mensajeInternacionalizacion.get("titulo.actualizar_carrito"));
 
-        // Labels
         lblCodigoCarrito.setText(mensajeInternacionalizacion.get("carrito.codigo_carrito"));
         lblCodigoProducto.setText(mensajeInternacionalizacion.get("carrito.codigo_producto"));
         lblNombreProducto.setText(mensajeInternacionalizacion.get("carrito.nombre"));
@@ -98,7 +107,6 @@ public class CarritoActualizarView extends JInternalFrame {
         lblIva.setText(mensajeInternacionalizacion.get("carrito.iva"));
         lblTotal.setText(mensajeInternacionalizacion.get("carrito.total"));
 
-        // Botones
         btnBuscarCarrito.setText(mensajeInternacionalizacion.get("carrito.buscar"));
         btnBuscarProducto.setText(mensajeInternacionalizacion.get("carrito.buscar"));
         btnAgregarProducto.setText(mensajeInternacionalizacion.get("carrito.agregar"));
@@ -107,7 +115,6 @@ public class CarritoActualizarView extends JInternalFrame {
         btnGuardar.setText(mensajeInternacionalizacion.get("carrito.guardar"));
         btnCancelar.setText(mensajeInternacionalizacion.get("carrito.cancelar"));
 
-        // Encabezados de tabla
         modeloTabla.setColumnIdentifiers(new Object[]{
                 mensajeInternacionalizacion.get("carrito.columna.codigo"),
                 mensajeInternacionalizacion.get("carrito.columna.nombre"),
@@ -117,6 +124,10 @@ public class CarritoActualizarView extends JInternalFrame {
         });
         configurarIconos();
     }
+
+    /**
+     * Carga y asigna los iconos a los botones de la interfaz.
+     */
     private void configurarIconos() {
         Dimension iconSize = new Dimension(30, 30);
 
@@ -145,6 +156,12 @@ public class CarritoActualizarView extends JInternalFrame {
         btnCancelar.setHorizontalTextPosition(SwingConstants.RIGHT);
     }
 
+    /**
+     * Carga un recurso de imagen y lo escala al tamaño deseado.
+     * @param ruta La ruta del recurso de la imagen.
+     * @param size La dimensión a la que se escalará el icono.
+     * @return un {@code ImageIcon} escalado, o {@code null} si no se encuentra.
+     */
     private ImageIcon cargarIcono(String ruta, Dimension size) {
         try {
             URL imgURL = getClass().getResource(ruta);
@@ -159,6 +176,9 @@ public class CarritoActualizarView extends JInternalFrame {
         }
     }
 
+    /**
+     * Inicializa el JComboBox de cantidades con valores del 1 al 20.
+     */
     private void inicializarComboBoxCantidad() {
         DefaultComboBoxModel<Integer> modelo = new DefaultComboBoxModel<>();
         for (int i = 1; i <= 20; i++) {
@@ -168,6 +188,10 @@ public class CarritoActualizarView extends JInternalFrame {
         cbxCantidad.setSelectedIndex(0);
     }
 
+    /**
+     * Habilita o deshabilita los campos de edición de productos del carrito.
+     * @param habilitado {@code true} para habilitar, {@code false} para deshabilitar.
+     */
     public void setCamposHabilitados(boolean habilitado) {
         txtCodigoProducto.setEnabled(habilitado);
         btnBuscarProducto.setEnabled(habilitado);
@@ -181,7 +205,88 @@ public class CarritoActualizarView extends JInternalFrame {
         btnCancelar.setEnabled(habilitado);
     }
 
-    // Getters (mantener los mismos)
+    /**
+     * Muestra un mensaje de diálogo al usuario.
+     * @param mensaje El texto a mostrar.
+     */
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    /**
+     * Limpia los campos de texto relacionados con la búsqueda y datos de un producto.
+     */
+    public void limpiarCamposProducto() {
+        txtCodigoProducto.setText("");
+        txtNombreProducto.setText("");
+        txtPrecioProducto.setText("");
+        cbxCantidad.setSelectedIndex(0);
+    }
+
+    /**
+     * Limpia todos los campos y la tabla de la vista, y deshabilita los controles de edición.
+     */
+    public void limpiarTodo() {
+        txtCodigoCarrito.setText("");
+        modeloTabla.setRowCount(0);
+        txtSubtotal.setText("");
+        txtIva.setText("");
+        txtTotal.setText("");
+        limpiarCamposProducto();
+        setCamposHabilitados(false);
+    }
+
+    /**
+     * Rellena la tabla de productos con los datos proporcionados.
+     * @param datos Un arreglo de objetos bidimensional con los datos de los ítems.
+     */
+    public void cargarProductosEnTabla(Object[][] datos) {
+        modeloTabla.setRowCount(0);
+        Locale locale = mensajeInternacionalizacion.getLocale();
+        for (Object[] fila : datos) {
+
+            fila[2] = FormateadorUtils.formatearMoneda((Double) fila[2], locale);
+            fila[4] = FormateadorUtils.formatearMoneda((Double) fila[4], locale);
+            modeloTabla.addRow(fila);
+        }
+    }
+
+    /**
+     * Actualiza los campos de texto de subtotal, IVA y total con valores formateados.
+     * @param subtotal El valor del subtotal.
+     * @param iva El valor del IVA.
+     * @param total El valor del total.
+     */
+    public void actualizarTotales(double subtotal, double iva, double total) {
+        Locale locale = mensajeInternacionalizacion.getLocale();
+        txtSubtotal.setText(FormateadorUtils.formatearMoneda(subtotal, locale));
+        txtIva.setText(FormateadorUtils.formatearMoneda(iva, locale));
+        txtTotal.setText(FormateadorUtils.formatearMoneda(total, locale));
+    }
+
+    /**
+     * Muestra los datos de un producto encontrado en los campos de texto correspondientes.
+     * @param nombre El nombre del producto.
+     * @param precio El precio del producto.
+     */
+    public void mostrarDatosProducto(String nombre, double precio) {
+        txtNombreProducto.setText(nombre);
+        Locale locale = mensajeInternacionalizacion.getLocale();
+        txtPrecioProducto.setText(FormateadorUtils.formatearMoneda(precio, locale));
+    }
+
+    /**
+     * Devuelve el manejador de internacionalización de esta vista.
+     * @return la instancia de {@code MensajeInternacionalizacionHandler}.
+     */
+    public MensajeInternacionalizacionHandler getMensajeInternacionalizacion() {
+        return mensajeInternacionalizacion;
+    }
+
+    /**
+     * A continuación se presentan los métodos de acceso para los componentes de la UI,
+     * permitiendo que el controlador interactúe con ellos.
+     */
     public JButton getBtnBuscarCarrito() { return btnBuscarCarrito; }
     public JButton getBtnAgregarProducto() { return btnAgregarProducto; }
     public JButton getBtnEliminarProducto() { return btnEliminarProducto; }
@@ -193,52 +298,7 @@ public class CarritoActualizarView extends JInternalFrame {
     public JTextField getTxtNombreProducto() { return txtNombreProducto; }
     public JTextField getTxtPrecioProducto() { return txtPrecioProducto; }
     public JComboBox<Integer> getCbxCantidad() { return cbxCantidad; }
-    public JTextField getTxtSubtotal() { return txtSubtotal; }
-    public JTextField getTxtIva() { return txtIva; }
-    public JTextField getTxtTotal() { return txtTotal; }
     public JTable getTblProductos() { return tblProductos; }
     public DefaultTableModel getModeloTabla() { return modeloTabla; }
     public JButton getBtnBuscarProducto() { return btnBuscarProducto; }
-
-    public void mostrarMensaje(String mensaje) {
-        JOptionPane.showMessageDialog(this, mensaje);
-    }
-
-    public void limpiarCamposProducto() {
-        txtCodigoProducto.setText("");
-        txtNombreProducto.setText("");
-        txtPrecioProducto.setText("");
-        cbxCantidad.setSelectedIndex(0);
-    }
-
-    public void limpiarTodo() {
-        txtCodigoCarrito.setText("");
-        modeloTabla.setRowCount(0);
-        txtSubtotal.setText("");
-        txtIva.setText("");
-        txtTotal.setText("");
-        limpiarCamposProducto();
-        setCamposHabilitados(false);
-    }
-
-    public void cargarProductosEnTabla(Object[][] datos) {
-        modeloTabla.setRowCount(0);
-        for (Object[] fila : datos) {
-            modeloTabla.addRow(fila);
-        }
-    }
-
-    public void actualizarTotales(double subtotal, double iva, double total) {
-        txtSubtotal.setText(String.format("%.2f", subtotal));
-        txtIva.setText(String.format("%.2f", iva));
-        txtTotal.setText(String.format("%.2f", total));
-    }
-
-    public void mostrarDatosProducto(String nombre, double precio) {
-        txtNombreProducto.setText(nombre);
-        txtPrecioProducto.setText(String.format("%.2f", precio));
-    }
-    public MensajeInternacionalizacionHandler getMensajeInternacionalizacion() {
-        return mensajeInternacionalizacion;
-    }
 }
