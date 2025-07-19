@@ -1,7 +1,6 @@
 package ec.edu.ups.poo.view;
 
 import ec.edu.ups.poo.controller.util.MensajeInternacionalizacionHandler;
-import ec.edu.ups.poo.controller.util.FormateadorUtils;
 import ec.edu.ups.poo.models.Carrito;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -9,14 +8,7 @@ import java.awt.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
-/**
- * La clase CarritoListaView es un JInternalFrame que permite visualizar una lista de carritos de compras.
- * Los usuarios pueden buscar carritos por código, listar todos los carritos y ver los detalles de un carrito seleccionado.
- * La vista es compatible con la internacionalización para sus etiquetas y textos de botones,
- * y muestra los carritos en una tabla con información formateada.
- */
 public class CarritoListaView extends JInternalFrame {
     private JTextField txtBuscar;
     private JButton btnBuscar;
@@ -29,11 +21,6 @@ public class CarritoListaView extends JInternalFrame {
 
     private JLabel lblBuscar;
 
-    /**
-     * Construye una nueva instancia de CarritoListaView.
-     * Inicializa los componentes de la interfaz de usuario, configura el modelo de la tabla,
-     * actualiza los textos para internacionalización y configura los iconos de los botones.
-     */
     public CarritoListaView() {
         super("", true, true, true, true);
         panelPrincipal.setBackground(Color.darkGray);
@@ -48,10 +35,6 @@ public class CarritoListaView extends JInternalFrame {
         setSize(600, 400);
 
 
-        if (txtBuscar == null) txtBuscar = new JTextField();
-        if (tblCarritos == null) tblCarritos = new JTable();
-
-
         this.mensajeInternacionalizacion = new MensajeInternacionalizacionHandler("es", "EC");
 
         modelo = new DefaultTableModel() {
@@ -60,18 +43,13 @@ public class CarritoListaView extends JInternalFrame {
                 return false;
             }
         };
-
+        modelo.setColumnIdentifiers(new Object[]{"Código", "Usuario", "Fecha", "Total"});
         tblCarritos.setModel(modelo);
 
 
         actualizarTextos();
         configurarIconos();
     }
-
-    /**
-     * Configura los iconos para los botones en la vista.
-     * Carga las imágenes desde las rutas especificadas y las escala a un tamaño consistente.
-     */
     private void configurarIconos() {
         Dimension iconSize = new Dimension(30, 30);
 
@@ -89,13 +67,6 @@ public class CarritoListaView extends JInternalFrame {
         btnVerDetalles.setHorizontalTextPosition(SwingConstants.RIGHT);
     }
 
-    /**
-     * Carga un icono desde la ruta dada y lo escala al tamaño especificado.
-     *
-     * @param ruta La ruta al recurso de la imagen.
-     * @param size El tamaño deseado para el icono.
-     * @return Un objeto ImageIcon, o null si la imagen no se puede cargar.
-     */
     private ImageIcon cargarIcono(String ruta, Dimension size) {
         try {
             URL imgURL = getClass().getResource(ruta);
@@ -110,16 +81,19 @@ public class CarritoListaView extends JInternalFrame {
         }
     }
 
-    /**
-     * Actualiza todas las etiquetas de texto, textos de botones y encabezados de columnas de la tabla
-     * según la configuración de internacionalización actual.
-     */
     public void actualizarTextos() {
+        // Título
         setTitle(mensajeInternacionalizacion.get("titulo.lista_carritos"));
+
+        // Labels
         lblBuscar.setText(mensajeInternacionalizacion.get("carrito.buscar_por_codigo"));
+
+        // Botones
         btnBuscar.setText(mensajeInternacionalizacion.get("carrito.buscar"));
         btnListar.setText(mensajeInternacionalizacion.get("carrito.listar_todos"));
         btnVerDetalles.setText(mensajeInternacionalizacion.get("carrito.ver_detalles"));
+
+        // Encabezados de tabla
         modelo.setColumnIdentifiers(new Object[]{
                 mensajeInternacionalizacion.get("carrito.columna.codigo"),
                 mensajeInternacionalizacion.get("carrito.columna.usuario"),
@@ -128,82 +102,31 @@ public class CarritoListaView extends JInternalFrame {
         });
     }
 
-    /**
-     * Carga los datos de una lista de carritos en la tabla.
-     * La tabla se vacía antes de añadir los nuevos datos.
-     *
-     * @param listaCarritos La lista de objetos Carrito a mostrar en la tabla.
-     */
     public void cargarDatos(List<Carrito> listaCarritos) {
         modelo.setNumRows(0);
-        Locale locale = mensajeInternacionalizacion.getLocale();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         for (Carrito carrito : listaCarritos) {
             modelo.addRow(new Object[]{
                     carrito.getCodigo(),
                     carrito.getUsuario().getUsername(),
-                    FormateadorUtils.formatearFecha(carrito.getFechaCreacion().getTime(), locale),
-                    FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale)
+                    sdf.format(carrito.getFechaCreacion().getTime()),
+                    String.format("%.2f", carrito.calcularTotal())
             });
         }
     }
-
-    /**
-     * Devuelve la instancia de MensajeInternacionalizacionHandler utilizada para la internacionalización.
-     *
-     * @return La instancia de MensajeInternacionalizacionHandler.
-     */
     public MensajeInternacionalizacionHandler getMensajeInternacionalizacion() {
         return mensajeInternacionalizacion;
     }
 
-    /**
-     * Devuelve el componente del botón "Buscar".
-     *
-     * @return El JButton para buscar carritos.
-     */
+    // Getters (mantener los mismos)
     public JButton getBtnBuscar() { return btnBuscar; }
-
-    /**
-     * Devuelve el componente del botón "Listar".
-     *
-     * @return El JButton para listar todos los carritos.
-     */
     public JButton getBtnListar() { return btnListar; }
-
-    /**
-     * Devuelve el componente del botón "Ver Detalles".
-     *
-     * @return El JButton para ver los detalles de un carrito.
-     */
     public JButton getBtnVerDetalles() { return btnVerDetalles; }
-
-    /**
-     * Devuelve el campo de texto para la búsqueda.
-     *
-     * @return El JTextField para la entrada de búsqueda.
-     */
     public JTextField getTxtBuscar() { return txtBuscar; }
-
-    /**
-     * Devuelve el JTable que muestra los carritos.
-     *
-     * @return El JTable para la visualización de carritos.
-     */
     public JTable getTblCarritos() { return tblCarritos; }
-
-    /**
-     * Devuelve el modelo de tabla predeterminado utilizado por la JTable de carritos.
-     *
-     * @return El DefaultTableModel de la tabla de carritos.
-     */
     public DefaultTableModel getModelo() { return modelo; }
 
-    /**
-     * Muestra un cuadro de diálogo de mensaje al usuario.
-     *
-     * @param mensaje El mensaje a mostrar.
-     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
